@@ -1,30 +1,24 @@
+const baseResponseStatus = require("../../../config/baseResponseStatus");
 const { pool } = require("../../../config/database");
+const { errResponse } = require("../../../config/response");
 const { logger } = require("../../../config/winston");
 
 const userDao = require("./userDao");
 
 // Provider: Read 비즈니스 로직 처리
 
-exports.retrieveUserList = async function (email) {
-  if (!email) {
-    const connection = await pool.getConnection(async (conn) => conn);
-    const userListResult = await userDao.selectUser(connection);
-    connection.release();
+exports.retrieveUserList = async function (nickname) {
+  const connection = await pool.getConnection(async (conn) => conn);
+  const userListResult = await userDao.selectUserByNickname(connection, nickname);  
+  
+  connection.release();
 
-    return userListResult;
-
-  } else {
-    const connection = await pool.getConnection(async (conn) => conn);
-    const userListResult = await userDao.selectUserEmail(connection, email);
-    connection.release();
-
-    return userListResult;
-  }
+  return userListResult;
 };
 
-exports.retrieveUser = async function (userId) {
+exports.retrieveUser = async function (id) {
   const connection = await pool.getConnection(async (conn) => conn);
-  const userResult = await userDao.selectUserId(connection, userId);
+  const userResult = await userDao.selectUserId(connection, id);
 
   connection.release();
 
