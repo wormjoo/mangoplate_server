@@ -125,7 +125,7 @@ async function selectFollowingUser(connection, userId) {
 }
 
 // 팔로우 취소
-async function deleteFollow(connection, userId, followerId) {
+async function deleteFollow(connection, deleteFollowingParams) {
   const deleteFollowQuery = `
       DELETE from Follower
       WHERE userId = ?
@@ -133,10 +133,26 @@ async function deleteFollow(connection, userId, followerId) {
       `;
   const deleteFollowRow = await connection.query(
     deleteFollowQuery,
-    [userId, followerId]
+    deleteFollowingParams
   );
 
   return deleteFollowRow;
+}
+
+// 팔로우 조회
+async function selectFollow(connection, userId, followerId) {
+  const selectFollowQuery = `
+      SELECT * 
+      FROM Follower
+      WHERE userId = ?
+      AND followerId = ?;
+      `;
+  const selectFollowRow = await connection.query(
+    selectFollowQuery,
+    [userId, followerId]
+  );
+
+  return selectFollowRow;
 }
 
 module.exports = {
@@ -149,5 +165,6 @@ module.exports = {
   insertFollower,
   selectFollowerUser,
   selectFollowingUser,
-  deleteFollow
+  deleteFollow,
+  selectFollow
 };

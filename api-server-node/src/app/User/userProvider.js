@@ -69,6 +69,15 @@ exports.accountCheck = async function (email) {
   return userAccountResult;
 };
 
+exports.followCheck = async function (userId, followerId) {
+  const connection = await pool.getConnection(async (conn) => conn);
+  const followCheckResult = await userDao.selectFollow(
+      connection, userId, followerId
+  );
+  connection.release();
+  return followCheckResult[0];
+};
+
 exports.cancleFollow = async function (userId, followerId) {
   const connection = await pool.getConnection(async (conn) => conn);
   const cancleFollowResult = await userDao.deleteFollow(connection, userId, followerId);

@@ -210,7 +210,7 @@ passport.use('kakao-login', new KakaoStrategy({
 
 /**
  * API No. 32
- * API Name : 팔로우 API
+ * API Name : 팔로우 추가 API
  * [POST] /app/followers
  */
  exports.postFollower = async function (req, res) {
@@ -219,6 +219,9 @@ passport.use('kakao-login', new KakaoStrategy({
      * Body: userId, followerId
      */
     const {userId, followerId} = req.body;
+
+    if (!userId) return res.send(errResponse(baseResponse.USER_ID_EMPTY));
+    if (!followerId) return res.send(errResponse(baseResponse.FOLLOWER_ID_EMPTY));
 
     const addFollowerResponse = await userService.createFollower(userId, followerId);
 
@@ -238,7 +241,10 @@ passport.use('kakao-login', new KakaoStrategy({
     const followerId = req.params.followerId;
     const userId = req.query.userId;
 
-    const deleteFollowing = await userProvider.cancleFollow(userId, followerId);
+    if (!userId) return res.send(errResponse(baseResponse.USER_ID_EMPTY));
+    if (!followerId) return res.send(errResponse(baseResponse.FOLLOWER_ID_EMPTY));
+
+    const deleteFollowing = await userService.cancleFollow(userId, followerId);
     return res.send(response(baseResponse.SUCCESS));
 };
 
@@ -253,6 +259,8 @@ passport.use('kakao-login', new KakaoStrategy({
      * Query String: userId
      */
     const userId = req.query.userId;
+
+    if (!userId) return res.send(errResponse(baseResponse.USER_ID_EMPTY));
 
     const userListByFollower = await userProvider.retrieveFollowerUserList(userId);
     return res.send(response(baseResponse.SUCCESS, userListByFollower));
@@ -269,6 +277,8 @@ passport.use('kakao-login', new KakaoStrategy({
      * Query String: userId
      */
     const userId = req.query.userId;
+
+    if (!userId) return res.send(errResponse(baseResponse.USER_ID_EMPTY));
 
     const userListByFollowing = await userProvider.retrieveFollowingUserList(userId);
     return res.send(response(baseResponse.SUCCESS, userListByFollowing));

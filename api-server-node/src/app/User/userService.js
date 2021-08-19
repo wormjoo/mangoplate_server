@@ -96,6 +96,10 @@ exports.postSignIn = async function (email, password) {
 
 exports.createFollower = async function (userId, followerId) {
     try {
+        // 팔로우 존재 확인
+        const followRows = await userProvider.followCheck(userId, followerId);
+        if (followRows.length > 0) return errResponse(baseResponse.ALREADY_EXIST_FOLLOW);
+
         const insertFollowerParams = [userId, followerId];
 
         const connection = await pool.getConnection(async (conn) => conn);
@@ -107,6 +111,29 @@ exports.createFollower = async function (userId, followerId) {
 
     } catch (err) {
         logger.error(`App - createFollower Service error\n: ${err.message}`);
+        return errResponse(baseResponse.DB_ERROR);
+    }
+};
+
+exports.cancleFollow = async function (userId, followerId) {
+    try {
+        // 팔로우 존재 확인
+        const followRows = await userProvider.followCheck(userId, followerId);
+        if (followRows.length == 0) {
+            return errResponse(baseResponse.FOLLOW_NOT_EXIST);
+        }
+
+        const deleteFollowingParams = [userId, followerId];
+
+        const connection = await pool.getConnection(async (conn) => conn);
+
+        const followResult = await userDao.deleteFollow(connection, deleteFollowingParams);
+        connection.release();
+        return response(baseResponse.SUCCESS);
+
+
+    } catch (err) {
+        logger.error(`App - cancleFollow Service error\n: ${err.message}`);
         return errResponse(baseResponse.DB_ERROR);
     }
 };
