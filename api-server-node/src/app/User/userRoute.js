@@ -37,6 +37,18 @@ module.exports = function(app){
     // 10. 유저 정보 수정 API (JWT 검증 및 Validation - 메소드 체이닝 방식으로 jwtMiddleware 사용)
     //app.patch('/app/users/:userId', jwtMiddleware, user.patchUsers);
 
+    // 32. 팔로우 추가 API
+    app.post('/app/follower', user.postFollower);
+
+    // 33. 팔로우 취소 API
+    app.delete('/app/follower/:followerId', user.deleteFollow);
+
+    // 34. 팔로워 조회 API
+    app.get('/app/followers', user.getFollowers);
+
+    // 35. 팔로잉 조회 API
+    app.get('/app/followings', user.getFollowings);
+
 };
 
 

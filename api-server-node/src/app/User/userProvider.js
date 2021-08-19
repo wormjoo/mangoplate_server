@@ -7,9 +7,27 @@ const userDao = require("./userDao");
 
 // Provider: Read 비즈니스 로직 처리
 
-exports.retrieveUserList = async function (nickname) {
+exports.retrieveUserListByNickname = async function (nickname) {
   const connection = await pool.getConnection(async (conn) => conn);
   const userListResult = await userDao.selectUserByNickname(connection, nickname);  
+  
+  connection.release();
+
+  return userListResult;
+};
+
+exports.retrieveFollowerUserList = async function (userId) {
+  const connection = await pool.getConnection(async (conn) => conn);
+  const userListResult = await userDao.selectFollowerUser(connection, userId);  
+  
+  connection.release();
+
+  return userListResult;
+};
+
+exports.retrieveFollowingUserList = async function (userId) {
+  const connection = await pool.getConnection(async (conn) => conn);
+  const userListResult = await userDao.selectFollowingUser(connection, userId);  
   
   connection.release();
 
@@ -49,4 +67,12 @@ exports.accountCheck = async function (email) {
   connection.release();
 
   return userAccountResult;
+};
+
+exports.cancleFollow = async function (userId, followerId) {
+  const connection = await pool.getConnection(async (conn) => conn);
+  const cancleFollowResult = await userDao.deleteFollow(connection, userId, followerId);
+  connection.release();
+
+  return cancleFollowResult;
 };

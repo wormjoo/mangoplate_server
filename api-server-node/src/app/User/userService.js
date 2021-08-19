@@ -62,7 +62,7 @@ exports.postSignIn = async function (email, password) {
         const passwordRows = await userProvider.passwordCheck(selectUserPasswordParams);
 
         if (passwordRows[0].password !== hashedPassword) {
-            return errResponse(baseResponse.SIGNIN_PASSWORD_WRONG);
+            return errResponse(baseResponse.SIGNIN_WRONG);
         }
 
         // 계정 상태 확인
@@ -90,6 +90,23 @@ exports.postSignIn = async function (email, password) {
 
     } catch (err) {
         logger.error(`App - postSignIn Service error\n: ${err.message} \n${JSON.stringify(err)}`);
+        return errResponse(baseResponse.DB_ERROR);
+    }
+};
+
+exports.createFollower = async function (userId, followerId) {
+    try {
+        const insertFollowerParams = [userId, followerId];
+
+        const connection = await pool.getConnection(async (conn) => conn);
+
+        const followResult = await userDao.insertFollower(connection, insertFollowerParams);
+        connection.release();
+        return response(baseResponse.SUCCESS);
+
+
+    } catch (err) {
+        logger.error(`App - createFollower Service error\n: ${err.message}`);
         return errResponse(baseResponse.DB_ERROR);
     }
 };

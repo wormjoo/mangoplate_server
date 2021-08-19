@@ -101,7 +101,7 @@ exports.getUserByNickname = async function (req, res) {
         return res.send(response(baseResponse.USER_NICKNAME_EMPTY));
     } else {
         // 유저 검색 조회
-        const userListByNickname = await userProvider.retrieveUserList(nickname);
+        const userListByNickname = await userProvider.retrieveUserListByNickname(nickname);
         if (userListByNickname[0] == undefined) {
             return res.send(response(baseResponse.USER_NICKNAME_NOT_EXIST));
           }
@@ -150,7 +150,7 @@ exports.login = async function (req, res) {
  * API Name : 카카오 소셜로그인1 (토큰받기) API
  * [GET] /kakao
  */
- passport.use('kakao-login', new KakaoStrategy({
+passport.use('kakao-login', new KakaoStrategy({
     clientID: '0ef49b2eb87ea6dd95b5f2dd8daa7525',
     callbackURL: 'http://localhost:3000/oauth/kakao/callback',
 }, async (accessToken, refreshToken, profile, done) =>
@@ -206,4 +206,70 @@ exports.login = async function (req, res) {
         const kakaoSignInResponse = await userService.postSignIn(email, password);
         return res.send(kakaoSignInResponse);
     }
+};
+
+/**
+ * API No. 32
+ * API Name : 팔로우 API
+ * [POST] /app/followers
+ */
+ exports.postFollower = async function (req, res) {
+
+    /**
+     * Body: userId, followerId
+     */
+    const {userId, followerId} = req.body;
+
+    const addFollowerResponse = await userService.createFollower(userId, followerId);
+
+    return res.send(addFollowerResponse);
+};
+
+/**
+ * API No. 33
+ * API Name : 팔로우 취소 API
+ * [DELETE] /app/follower/:followerId
+ */
+ exports.deleteFollow = async function (req, res) {
+
+    /**
+     * Query String: userId
+     */
+    const followerId = req.params.followerId;
+    const userId = req.query.userId;
+
+    const deleteFollowing = await userProvider.cancleFollow(userId, followerId);
+    return res.send(response(baseResponse.SUCCESS));
+};
+
+/**
+ * API No. 34
+ * API Name : 팔로워 조회 API
+ * [GET] /app/followers
+ */
+ exports.getFollowers = async function (req, res) {
+
+    /**
+     * Query String: userId
+     */
+    const userId = req.query.userId;
+
+    const userListByFollower = await userProvider.retrieveFollowerUserList(userId);
+    return res.send(response(baseResponse.SUCCESS, userListByFollower));
+};
+
+/**
+ * API No. 35
+ * API Name : 팔로잉 조회 API
+ * [GET] /app/following
+ */
+ exports.getFollowings = async function (req, res) {
+
+    /**
+     * Query String: userId
+     */
+    const userId = req.query.userId;
+
+    const userListByFollowing = await userProvider.retrieveFollowingUserList(userId);
+    return res.send(response(baseResponse.SUCCESS, userListByFollowing));
 };
