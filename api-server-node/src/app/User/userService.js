@@ -137,3 +137,18 @@ exports.cancleFollow = async function (userId, followerId) {
         return errResponse(baseResponse.DB_ERROR);
     }
 };
+
+exports.withdraw = async function (id) {
+    try {
+        console.log(id)
+        const connection = await pool.getConnection(async (conn) => conn);
+        const editUserResult = await userDao.updateUserStatus(connection, id);
+        connection.release();
+
+        return response(baseResponse.SUCCESS);
+
+    } catch (err) {
+        logger.error(`App - withdraw Service error\n: ${err.message}`);
+        return errResponse(baseResponse.DB_ERROR);
+    }
+}

@@ -209,6 +209,27 @@ passport.use('kakao-login', new KakaoStrategy({
 };
 
 /**
+ * API No. 9
+ * API Name : 회원 탈퇴 API
+ * [PATCH] /app/withdraw/:userId
+ * path variable : userId
+ */
+ exports.withdrawal = async function (req, res) {
+
+    // jwt - userId, path variable :userId
+
+    //const userIdFromJWT = req.verifiedToken.userId;
+
+    const userId = req.params.userId;
+
+    //if (userIdFromJWT != userId) {
+    //    res.send(errResponse(baseResponse.USER_ID_NOT_MATCH));
+    //} 
+    const userWithdraw = await userService.withdraw(userId);
+    return res.send(userWithdraw);
+};
+
+/**
  * API No. 32
  * API Name : 팔로우 추가 API
  * [POST] /app/followers
@@ -245,7 +266,7 @@ passport.use('kakao-login', new KakaoStrategy({
     if (!followerId) return res.send(errResponse(baseResponse.FOLLOWER_ID_EMPTY));
 
     const deleteFollowing = await userService.cancleFollow(userId, followerId);
-    return res.send(response(baseResponse.SUCCESS));
+    return res.send(response(deleteFollowing));
 };
 
 /**

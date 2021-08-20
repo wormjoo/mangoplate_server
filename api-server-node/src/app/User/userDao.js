@@ -155,6 +155,15 @@ async function selectFollow(connection, userId, followerId) {
   return selectFollowRow;
 }
 
+async function updateUserStatus(connection, id) {
+  const updateUserQuery = `
+  UPDATE User
+  SET status = 'N'
+  WHERE id = ?;`;
+  const updateUserRow = await connection.query(updateUserQuery, id);
+  return updateUserRow[0];
+}
+
 module.exports = {
   selectUserByNickname,
   selectUserEmail,
@@ -166,5 +175,6 @@ module.exports = {
   selectFollowerUser,
   selectFollowingUser,
   deleteFollow,
-  selectFollow
+  selectFollow,
+  updateUserStatus
 };
