@@ -304,3 +304,72 @@ passport.use('kakao-login', new KakaoStrategy({
     const userListByFollowing = await userProvider.retrieveFollowingUserList(userId);
     return res.send(response(baseResponse.SUCCESS, userListByFollowing));
 };
+
+/**
+ * API No. 44
+ * API Name : 유저 정보 수정 (닉네임) API
+ * [PATCH] /app/:userId/name
+ * path variable : userId
+ */
+ exports.patchName = async function (req, res) {
+
+    // jwt - userId, path variable :userId
+    // body : nickname
+
+    //const userIdFromJWT = req.verifiedToken.userId;
+
+    const userId = req.params.userId;
+    const nickname = req.body.nickname;
+
+    //if (userIdFromJWT != userId) {
+    //    res.send(errResponse(baseResponse.USER_ID_NOT_MATCH));
+    //} 
+    const editUserNameResult = await userService.editUserName(userId, nickname);
+    return res.send(editUserNameResult);
+};
+
+/**
+ * API No. 45
+ * API Name : 유저 정보 수정 (전화번호) API
+ * [PATCH] /app/:userId/phone-number
+ * path variable : userId
+ */
+ exports.patchPhoneNumber = async function (req, res) {
+
+    // jwt - userId, path variable :userId
+    // body : nickname
+
+    //const userIdFromJWT = req.verifiedToken.userId;
+
+    const userId = req.params.userId;
+    const phoneNumber = req.body.phoneNumber;
+
+    //if (userIdFromJWT != userId) {
+    //    res.send(errResponse(baseResponse.USER_ID_NOT_MATCH));
+    //} 
+    const editUserPhoneNumberResult = await userService.editUserPhoneNumber(userId, phoneNumber);
+    return res.send(editUserPhoneNumberResult);
+};
+
+/**
+ * API No. 47
+ * API Name : 유저 정보 수정 (프로필이미지) API
+ * [PATCH] /app/:userId/profile-image
+ * path variable : userId
+ */
+ exports.patchProfileImage = async function (req, res) {
+
+    // jwt - userId, path variable :userId
+    // body : nickname
+
+    //const userIdFromJWT = req.verifiedToken.userId;
+
+    const userId = req.params.userId;
+    const profileImage = req.body.profileImage;
+
+    //if (userIdFromJWT != userId) {
+    //    res.send(errResponse(baseResponse.USER_ID_NOT_MATCH));
+    //} 
+    const editUserProfileImageResult = await userService.editUserProfileImage(userId, profileImage);
+    return res.send(editUserProfileImageResult);
+};

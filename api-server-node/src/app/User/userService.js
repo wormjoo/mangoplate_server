@@ -152,3 +152,48 @@ exports.withdraw = async function (id) {
         return errResponse(baseResponse.DB_ERROR);
     }
 }
+
+exports.editUserName = async function (id, nickname) {
+    try {
+        console.log(id)
+        const connection = await pool.getConnection(async (conn) => conn);
+        const editNameResult = await userDao.updateUserName(connection, nickname, id);
+        connection.release();
+
+        return response(baseResponse.SUCCESS);
+
+    } catch (err) {
+        logger.error(`App - editUserName Service error\n: ${err.message}`);
+        return errResponse(baseResponse.DB_ERROR);
+    }
+}
+
+exports.editUserPhoneNumber = async function (id, phoneNumber) {
+    try {
+        console.log(id)
+        const connection = await pool.getConnection(async (conn) => conn);
+        const editPhoneNumberResult = await userDao.updateUserPhoneNumber(connection, phoneNumber, id);
+        connection.release();
+
+        return response(baseResponse.SUCCESS);
+
+    } catch (err) {
+        logger.error(`App - editUserPhoneNumber Service error\n: ${err.message}`);
+        return errResponse(baseResponse.DB_ERROR);
+    }
+}
+
+exports.editUserProfileImage = async function (id, profileImage) {
+    try {
+        console.log(id)
+        const connection = await pool.getConnection(async (conn) => conn);
+        const editProfileImageResult = await userDao.updateUserProfileImage(connection, profileImage, id);
+        connection.release();
+
+        return response(baseResponse.SUCCESS);
+
+    } catch (err) {
+        logger.error(`App - editUserProfileImage Service error\n: ${err.message}`);
+        return errResponse(baseResponse.DB_ERROR);
+    }
+}

@@ -49,6 +49,18 @@ module.exports = function(app){
     // 35. 팔로잉 조회 API
     app.get('/app/followings', user.getFollowings);
 
+    // 44. 유저 정보 수정 (닉네임) API
+    app.patch('/app/:userId/nickname', user.patchName);
+
+    // 45. 유저 정보 수정 (전화번호) API
+    app.patch('/app/:userId/phone-number', user.patchPhoneNumber);
+
+    // 46. 유저 정보 수정 (이메일) API
+    // app.patch('/app/:userId/email', user.patchEmail);
+
+    // 47. 유저 정보 수정 (프로필이미지) API
+    app.patch('/app/:userId/profile-image', user.patchProfileImage);
+
 };
 
 

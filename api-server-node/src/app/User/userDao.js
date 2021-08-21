@@ -157,11 +157,42 @@ async function selectFollow(connection, userId, followerId) {
 
 async function updateUserStatus(connection, id) {
   const updateUserQuery = `
-  UPDATE User
-  SET status = 'N'
-  WHERE id = ?;`;
+      UPDATE User
+      SET status = 'N'
+      WHERE id = ?;
+      `;
   const updateUserRow = await connection.query(updateUserQuery, id);
   return updateUserRow[0];
+}
+
+async function updateUserName(connection, nickname, id) {
+  const updateUserNicknameQuery = `
+      UPDATE User
+      SET nickname = ?
+      WHERE id = ?;
+      `;
+  const updateUserNicknameRow = await connection.query(updateUserNicknameQuery, [nickname, id]);
+  return updateUserNicknameRow[0];
+}
+
+async function updateUserPhoneNumber(connection, phoneNumber, id) {
+  const updateUserPhoneNumberQuery = `
+      UPDATE User
+      SET phoneNumber = ?
+      WHERE id = ?;
+      `;
+  const updateUserPhoneNumberRow = await connection.query(updateUserPhoneNumberQuery, [phoneNumber, id]);
+  return updateUserPhoneNumberRow[0];
+}
+
+async function updateUserProfileImage(connection, profileImage, id) {
+  const updateUserProfileImageQuery = `
+      UPDATE User
+      SET profileImage = ?
+      WHERE id = ?;
+      `;
+  const updateUserProfileImageRow = await connection.query(updateUserProfileImageQuery, [profileImage, id]);
+  return updateUserProfileImageRow[0];
 }
 
 module.exports = {
@@ -176,5 +207,8 @@ module.exports = {
   selectFollowingUser,
   deleteFollow,
   selectFollow,
-  updateUserStatus
+  updateUserStatus,
+  updateUserName,
+  updateUserPhoneNumber,
+  updateUserProfileImage
 };

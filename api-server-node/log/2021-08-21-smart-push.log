@@ -1,0 +1,6 @@
+{"message":"undefined - API Server Start At Port 3000","level":"info","timestamp":"2021-08-21 16:28:37"}
+{"message":"undefined - API Server Start At Port 3000","level":"info","timestamp":"2021-08-21 16:32:32"}
+{"message":"undefined - API Server Start At Port 3000","level":"info","timestamp":"2021-08-21 16:33:11"}
+{"message":"App - editUserPhoneNumber Service error\n: userDao.updatePhoneNumber is not a function","level":"error","timestamp":"2021-08-21 16:33:14"}
+{"message":"undefined - API Server Start At Port 3000","level":"info","timestamp":"2021-08-21 16:33:39"}
+{"message":"undefined - API Server Start At Port 3000","level":"info","timestamp":"2021-08-21 17:23:01"}
