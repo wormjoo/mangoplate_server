@@ -5,7 +5,7 @@ const baseResponse = require("../../../config/baseResponseStatus");
 const {response, errResponse} = require("../../../config/response");
 
 /**
- * API No. 11
+ * API No. 10
  * API Name : 식당 등록하기 API 
  * [POST] /app/restaurants
  */
@@ -29,4 +29,71 @@ exports.postRestaurant = async function (req, res) {
     );
 
     return res.send(registrateRestaurant);
+};
+
+/**
+ * API No. 11
+ * API Name : 식당 조회 API 
+ * [GET] /app/restaurants
+ */
+exports.getRestaurants = async function (req, res) {
+
+    /**
+     * Query String: restaurantId
+     */
+    const restaurantId = req.query.restaurantId;
+
+    if (!restaurantId) {
+        // 식당 전체 조회
+        const restaurantListResult = await restaurantProvider.retrieveRestaurantList();
+        return res.send(response(baseResponse.SUCCESS, restaurantListResult));
+    } else {
+        // 식당 검색 조회
+        const restaurantListByName = await restaurantProvider.retrieveRestaurantList(restaurantId);
+        return res.send(response(baseResponse.SUCCESS, restaurantListByName));
+    }
+};
+
+/**
+ * API No. 16
+ * API Name : 리뷰 작성 API
+ * [POST] /app/reviews
+ * body : userId, restaurantId, reviewImage, evaluation, content
+ */
+ exports.postReview = async function (req, res) {
+
+    /**
+     * Body: userId, restaurantId, reviewImage, evaluation, content
+     */
+
+    let {userId, restaurantId, reviewImage, evaluation, content} = req.body;
+
+    // 이미지 첨부 안 하면 null로
+    if (!reviewImage) {
+        reviewImage = null;
+    }
+
+    // 평가도 점수로 변환
+    if (evaluation == '맛있다!') {
+        evaluation = 5;
+    } else if (evaluation == '괜찮다') {
+        evaluation = 3;
+    } else if (evaluation == '별로') {
+        evaluation = 1;
+    }
+
+    // 리뷰 내용 길이 체크
+    if (content.length > 10000) {
+        return res.send(response(baseResponse.REVIEW_CONTENT_LENGTH));
+    }
+
+    const writeReviewResponse = await restaurantService.writeReview(
+        userId, 
+        restaurantId, 
+        reviewImage, 
+        evaluation, 
+        content
+    );
+
+    return res.send(writeReviewResponse);
 };

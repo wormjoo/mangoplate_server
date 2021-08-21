@@ -19,6 +19,7 @@ module.exports = {
     SIGNIN_TOKEN_EMPTY : { "isSuccess": false, "code": 2008, "message": "로그인하고자 하는 토큰을 입력해주세요." },
     FOLLOWER_ID_EMPTY : { "isSuccess": false, "code": 2009, "message": "팔로워 id가 입력되지 않았습니다." },
     USER_ID_NOT_MATCH : { "isSuccess": false, "code": 2010, "message": "유저 아이디 값을 확인해주세요" },
+    REVIEW_CONTENT_LENGTH : { "isSuccess": false, "code": 2011, "message": "리뷰 내용은 10000자 이하로 입력해주세요." },
     
 
     // Response error

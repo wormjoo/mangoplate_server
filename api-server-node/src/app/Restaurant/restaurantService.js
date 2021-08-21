@@ -25,3 +25,27 @@ exports.createRestaurant = async function (userId, name, address, callNumber, cu
         return errResponse(baseResponse.DB_ERROR);
     }
 };
+
+exports.writeReview = async function (userId, restaurantId, image, evaluation, content) {
+    try {
+        insertReviewParams = [userId, restaurantId, evaluation, content];
+        
+        const connection = await pool.getConnection(async (conn) => conn);
+
+        if (image == null) {
+            const reviewResult = await restaurantDao.insertReview(connection, insertReviewParams);
+            console.log(`추가된 리뷰 : ${reviewResult[0].insertId}`);
+        } else {
+            const reviewResult = await restaurantDao.insertReview(connection, insertReviewParams);
+            imageParams = [restaurantId, reviewResult[0].insertId, image];
+            const imageResult = await restaurantDao.insertImage(connection, imageParams);
+            console.log(`추가된 리뷰 : ${reviewResult[0].insertId}`);
+        }
+        connection.release();
+        return response(baseResponse.SUCCESS);
+
+    } catch (err) {
+        logger.error(`App - writeReview Service error\n: ${err.message}`);
+        return errResponse(baseResponse.DB_ERROR);
+    }
+};
