@@ -147,17 +147,36 @@ exports.login = async function (req, res) {
 
 /**
  * API No. 6
- * API Name : 카카오 소셜로그인1 (토큰받기) API
- * [GET] /kakao
+ * API Name : 홀릭 배지 생성 API
+ * [PATCH] /app/holic/:userId
+ * path variable : userId
+ * body : holic
  */
-passport.use('kakao-login', new KakaoStrategy({
-    clientID: '0ef49b2eb87ea6dd95b5f2dd8daa7525',
-    callbackURL: 'http://localhost:3000/oauth/kakao/callback',
-}, async (accessToken, refreshToken, profile, done) =>
-{
-    console.log(accessToken);
-    console.log(profile);
-}));
+ exports.patchHolic = async function (req, res) {
+
+    // jwt - userId, path variable :userId
+
+    //const userIdFromJWT = req.verifiedToken.userId;
+
+    const userId = req.params.userId;
+    let holic = req.body.holic;
+
+    if (!userId) return res.send(response(baseResponse.USER_ID_EMPTY));
+
+    if (holic == "black") {
+        holic = 3;
+    } else if (holic == "red") {
+        holic = 2;
+    } else {
+        return res.send(response(baseResponse.HOLIC_BADGE_ERROR_TYPE));
+    }
+
+    //if (userIdFromJWT != userId) {
+    //    res.send(errResponse(baseResponse.USER_ID_NOT_MATCH));
+    //} 
+    const userHolicResponse = await userService.holicBadge(userId, holic);
+    return res.send(userHolicResponse);
+};
 
 /**
  * API No. 7
@@ -182,6 +201,7 @@ passport.use('kakao-login', new KakaoStrategy({
     })
 
     console.log(kakao_profile);
+    console.log(kakao_profile.data.kakao_account.email);
 
     const email = kakao_profile.data.kakao_account.email;
     const nickname = kakao_profile.data.properties.nickname;
@@ -262,8 +282,8 @@ passport.use('kakao-login', new KakaoStrategy({
     const followerId = req.params.followerId;
     const userId = req.query.userId;
 
-    if (!userId) return res.send(errResponse(baseResponse.USER_ID_EMPTY));
-    if (!followerId) return res.send(errResponse(baseResponse.FOLLOWER_ID_EMPTY));
+    if (!userId) return res.send(response(baseResponse.USER_ID_EMPTY));
+    if (!followerId) return res.send(response(baseResponse.FOLLOWER_ID_EMPTY));
 
     const deleteFollowing = await userService.cancleFollow(userId, followerId);
     return res.send(response(deleteFollowing));
@@ -281,7 +301,7 @@ passport.use('kakao-login', new KakaoStrategy({
      */
     const userId = req.query.userId;
 
-    if (!userId) return res.send(errResponse(baseResponse.USER_ID_EMPTY));
+    if (!userId) return res.send(response(baseResponse.USER_ID_EMPTY));
 
     const userListByFollower = await userProvider.retrieveFollowerUserList(userId);
     return res.send(response(baseResponse.SUCCESS, userListByFollower));
@@ -299,7 +319,7 @@ passport.use('kakao-login', new KakaoStrategy({
      */
     const userId = req.query.userId;
 
-    if (!userId) return res.send(errResponse(baseResponse.USER_ID_EMPTY));
+    if (!userId) return res.send(response(baseResponse.USER_ID_EMPTY));
 
     const userListByFollowing = await userProvider.retrieveFollowingUserList(userId);
     return res.send(response(baseResponse.SUCCESS, userListByFollowing));

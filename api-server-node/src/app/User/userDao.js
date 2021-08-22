@@ -195,6 +195,16 @@ async function updateUserProfileImage(connection, profileImage, id) {
   return updateUserProfileImageRow[0];
 }
 
+async function updateUserHolic(connection, id, holic) {
+  const updateUserHolicQuery = `
+      UPDATE User
+      SET holic = ?
+      WHERE id = ?;
+      `;
+  const updateUserHolicRow = await connection.query(updateUserHolicQuery, [holic, id]);
+  return updateUserHolicRow[0];
+}
+
 module.exports = {
   selectUserByNickname,
   selectUserEmail,
@@ -210,5 +220,6 @@ module.exports = {
   updateUserStatus,
   updateUserName,
   updateUserPhoneNumber,
-  updateUserProfileImage
+  updateUserProfileImage,
+  updateUserHolic
 };

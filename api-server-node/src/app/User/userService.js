@@ -197,3 +197,18 @@ exports.editUserProfileImage = async function (id, profileImage) {
         return errResponse(baseResponse.DB_ERROR);
     }
 }
+
+exports.holicBadge = async function (id, holic) {
+    try {
+        console.log(id)
+        const connection = await pool.getConnection(async (conn) => conn);
+        const editHolicResult = await userDao.updateUserHolic(connection, id, holic);
+        connection.release();
+
+        return response(baseResponse.SUCCESS);
+
+    } catch (err) {
+        logger.error(`App - holicBadge Service error\n: ${err.message}`);
+        return errResponse(baseResponse.DB_ERROR);
+    }
+}

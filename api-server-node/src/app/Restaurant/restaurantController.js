@@ -97,3 +97,22 @@ exports.getRestaurants = async function (req, res) {
 
     return res.send(writeReviewResponse);
 };
+
+/**
+ * API No. 17
+ * API Name : 특정 식당 리뷰 조회 API 
+ * [GET] /app/reviews/:restaurantId
+ * path variable : restaurantId
+ */
+ exports.getReview = async function (req, res) {
+
+    /**
+     * path variable : restaurantId
+     */
+    const restaurantId = req.params.restaurantId;
+
+    if (!restaurantId) return res.send(errResponse(baseResponse.RESTAURANT_ID_EMPTY));
+
+    const reviewByRestaurant = await restaurantProvider.retrieveReview(restaurantId);
+    return res.send(response(baseResponse.SUCCESS, reviewByRestaurant));
+};

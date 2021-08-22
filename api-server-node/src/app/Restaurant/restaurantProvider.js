@@ -23,3 +23,12 @@ exports.retrieveRestaurantList = async function (id) {
         return restaurantListResult;
     }
 };
+
+exports.retrieveReview = async function (restaurantId) {
+  const connection = await pool.getConnection(async (conn) => conn);
+  const reviewResult = await restaurantDao.selectReviewByRestaurant(connection, restaurantId);  
+  
+  connection.release();
+
+  return reviewResult;
+};

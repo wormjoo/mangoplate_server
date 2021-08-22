@@ -18,12 +18,8 @@ module.exports = function(app){
     // 5. 로그인 하기 API (JWT 생성)
     app.post('/app/login', user.login);
 
-    // 6. 카카오 소셜로그인1 (토큰받기) API
-    app.get('/kakao', passport.authenticate('kakao-login'));
-    app.get('/oauth/kakao/callback', passport.authenticate('kakao-login', {
-        successRedirect: '/',
-        failureRedirect : '/',
-    }), (req, res) => {res.redirect('/');});
+    // 6. 홀릭 배지 생성 API
+    app.patch('/app/holic/:userId', user.patchHolic);
 
     // 7.카카오 소셜로그인2 (인증)API
     app.post('/kakao/login', user.kakaoSignIn);
