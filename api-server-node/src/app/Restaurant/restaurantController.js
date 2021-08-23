@@ -33,25 +33,45 @@ exports.postRestaurant = async function (req, res) {
 
 /**
  * API No. 11
- * API Name : 식당 조회 API 
+ * API Name : 식당 조회 API (메인 화면)
  * [GET] /app/restaurants
  */
 exports.getRestaurants = async function (req, res) {
 
     /**
-     * Query String: restaurantId
+     * Query String: name, area
      */
-    const restaurantId = req.query.restaurantId;
+    let name = req.query.name;
+    const area = req.query.area;
 
-    if (!restaurantId) {
+    if (!name) {
         // 식당 전체 조회
-        const restaurantListResult = await restaurantProvider.retrieveRestaurantList();
+        const restaurantListResult = await restaurantProvider.retrieveRestaurantList(area);
         return res.send(response(baseResponse.SUCCESS, restaurantListResult));
     } else {
         // 식당 검색 조회
-        const restaurantListByName = await restaurantProvider.retrieveRestaurantList(restaurantId);
+        name = `%${name}%`;
+        const restaurantListByName = await restaurantProvider.retrieveRestaurantList(area, name);
         return res.send(response(baseResponse.SUCCESS, restaurantListByName));
     }
+};
+
+/**
+ * API No. 12
+ * API Name : 특정 식당 조회 API (맛집 상세)
+ * [GET] /app/restaurants/:restaurantId
+ * path vairable: restaurantId
+ */
+ exports.getRestaurant = async function (req, res) {
+
+    /**
+     * Path varibale: restaurantId
+     */
+
+    const restaurantId = req.params.restaurantId;
+
+    const restaurantResult = await restaurantProvider.retrieveRestaurant(restaurantId);
+    return res.send(response(baseResponse.SUCCESS, restaurantResult));
 };
 
 /**

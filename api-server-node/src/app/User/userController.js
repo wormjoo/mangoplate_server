@@ -47,7 +47,6 @@ exports.postUsers = async function (req, res) {
     if (!profileImage)
         profileImage = 'https://cdn.pixabay.com/photo/2018/11/13/21/43/instagram-3814049_1280.png';
 
-    /** 
     // 이메일 빈 값 체크
     if (!email)
         return res.send(response(baseResponse.SIGNUP_EMAIL_EMPTY));
@@ -71,8 +70,6 @@ exports.postUsers = async function (req, res) {
     // 비밀번호 형식 체크 (by 정규표현식)
     if (!regExpPassword.test(password))
         return res.send(response(baseResponse.SIGNUP_PASSWORD_ERROR_TYPE));
-
-    **/
 
     const signUpResponse = await userService.createUser(
         email,
@@ -222,7 +219,7 @@ exports.login = async function (req, res) {
         const kakaoSignInResponse = await userService.postSignIn(email, password);
         return res.send(kakaoSignInResponse);
     }
-    else if (userIdRows.length > 0) {
+    else if (emailRows.length > 0) {
         const kakaoSignInResponse = await userService.postSignIn(email, password);
         return res.send(kakaoSignInResponse);
     }

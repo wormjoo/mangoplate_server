@@ -8,6 +8,9 @@ module.exports = function(app){
     // 11. 식당 조회 API
     app.get('/app/restaurants', restaurant.getRestaurants);
 
+    // 12. 특정 식당 조회 API
+    app.get('/app/restaurants/:restaurantId', restaurant.getRestaurant);
+
     // 16. 리뷰 작성 API
     app.post('/app/reviews', restaurant.postReview);
 
