@@ -12,6 +12,16 @@ async function insertRestaurant(connection, insertRestaurantParams) {
   return insertRestaurantRow;
 }
 
+// 식당 이미지 생성
+async function insertRestaurantImage(connection, id, image) {
+  const insertRestaurantImageQuery = `
+      INSERT INTO RestaurantImage(restaurantId, imageUrl)
+      VALUES(?, ?);
+  `;
+  const insertRestaurantImageRow = await connection.query(insertRestaurantImageQuery, [id, image]);
+  return insertRestaurantImageRow;
+}
+
 // 지역 내 모든 식당 조회
 async function selectRestaurant(connection, detailArea) {
   const selectRestaurantListQuery = `
@@ -60,10 +70,10 @@ async function selectRestaurantById(connection, id) {
           (select count(*) from WannaGo where restaurantId = R.id) as starCount,
           round((select avg(evaluation) from Review where restaurantId = R.id), 1) as rating,
           R.businessHour as businessHour, R.holiday as holiday, R.lastOrder as lastOrder, R.priceInfo as priceInfo,
-          R.updateAt as infoUpdate,
+          date_format(R.updateAt, '%Y-%m-%d') as infoUpdate,
           (select group_concat(menu) from Menu where restaurantId = R.id) as menu,
-          (select group_concat(price) from Menu where restaurantId = R.id) as price,
-          (select updateAt from Menu where restaurantId = R.id order by updateAt desc limit 1) as menuUpdate
+          (select group_concat(FORMAT(price , 0)) from Menu where restaurantId = R.id) as price,
+          date_format((select updateAt from Menu where restaurantId = R.id order by updateAt desc limit 1), '%Y-%m-%d') as menuUpdate
       from Restaurant R
       where R.id = ?;
       `;
@@ -138,13 +148,63 @@ async function selectReviewByRestaurant(connection, id) {
   return restaurantByNameRows;
 }
 
+// 내가 등록한 식당 조회
+async function selectMyRestaurant(connection, userId) {
+  const selectMyRestaurantQuery = `
+      select (select imageUrl from RestaurantImage RI where restaurantId = R.id order by RI.createAt desc limit 1) as imageUrl,
+          R.name, R.address,
+          (select type from FoodType F where F.id = R.cuisine) as cuisine,
+          case
+            when timestampdiff(minute, R.createAt,current_timestamp()) < 60
+            then concat(timestampdiff(minute, R.createAt,current_timestamp()),' 분 전')
+            when timestampdiff(hour, R.createAt,current_timestamp()) < 24
+            then concat(timestampdiff(hour, R.createAt,current_timestamp()),' 시간 전')
+            when timestampdiff(day, R.createAt, current_timestamp()) < 8
+            then concat(timestampdiff(day, R.createAt, current_timestamp()),'일 전')
+            else date_format(R.createAt, '%Y-%m-%d')
+          end as date
+      from Restaurant R
+      join FoodType F on R.cuisine = F.id
+      where R.userId = ?
+      group by R.id;
+  `;
+  const [myRestaurantRows] = await connection.query(selectMyRestaurantQuery, userId);
+  return myRestaurantRows;
+}
+
+// 식당 편의정보 조회
+async function selectRestaurantInfo(connection, restaurantId) {
+  const selectRestaurantInfoQuery = `
+      select businessHour, holiday, lastOrder, (select type from FoodType F where F.id = R.cuisine) as cuisine, corkage, webSite, parkingInfo 
+      from Restaurant R
+      where R.id = ?;
+      `;
+  const infoRow = await connection.query(selectRestaurantInfoQuery, restaurantId);
+  return infoRow[0];
+}
+
+// 식당 메뉴 조회
+async function selectRestaurantMenu(connection, restaurantId) {
+  const selectRestaurantMenuQuery = `
+      select menu, FORMAT(price , 0) as price from Menu M
+      join Restaurant R on M.restaurantId = R.id
+      where R.id = ?;
+      `;
+  const [menuRows] = await connection.query(selectRestaurantMenuQuery, restaurantId);
+  return menuRows;
+}
+
 module.exports = {
   insertRestaurant,
+  insertRestaurantImage,
   selectRestaurant,
   selectRestaurantByName,
   insertImage,
   insertReview,
   selectReviewByRestaurant,
   selectRestaurantById,
-  updateViews
+  updateViews,
+  selectMyRestaurant,
+  selectRestaurantInfo,
+  selectRestaurantMenu
 };

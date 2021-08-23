@@ -75,6 +75,60 @@ exports.getRestaurants = async function (req, res) {
 };
 
 /**
+ * API No. 13
+ * API Name : 내가 등록한 식당 조회 API
+ * [GET] /app/:userId/restaurants
+ * path vairable: userId
+ */
+ exports.getMyRestaurants = async function (req, res) {
+
+    /**
+     * Path varibale: userId
+     */
+
+    const userId = req.params.userId;
+
+    const myRestaurantResult = await restaurantProvider.retrieveMyRestaurantList(userId);
+    return res.send(response(baseResponse.SUCCESS, myRestaurantResult));
+};
+
+/**
+ * API No. 14
+ * API Name : 특정 식당 편의정보 조회 API
+ * [GET] /app/restaurants/:restaurantId/information
+ * path vairable: restaurantId
+ */
+ exports.getRestaurantInfo = async function (req, res) {
+
+    /**
+     * Path varibale: restaurantId
+     */
+
+    const restaurantId = req.params.restaurantId;
+
+    const restaurantInfoResult = await restaurantProvider.retrieveRestaurantInfo(restaurantId);
+    return res.send(response(baseResponse.SUCCESS, restaurantInfoResult));
+};
+
+/**
+ * API No. 15
+ * API Name : 특정 식당 메뉴 조회 API
+ * [GET] /app/restaurants/:restaurantId/menu
+ * path vairable: restaurantId
+ */
+ exports.getRestaurantMenu = async function (req, res) {
+
+    /**
+     * Path varibale: restaurantId
+     */
+
+    const restaurantId = req.params.restaurantId;
+
+    const restaurantMenuResult = await restaurantProvider.retrieveRestaurantMenu(restaurantId);
+    return res.send(response(baseResponse.SUCCESS, restaurantMenuResult));
+};
+
+/**
  * API No. 16
  * API Name : 리뷰 작성 API
  * [POST] /app/reviews
