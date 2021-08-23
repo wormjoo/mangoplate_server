@@ -60,21 +60,3 @@ exports.retrieveRestaurantMenu = async function (restaurantId) {
   
     return menuResult;
 };
-
-exports.retrieveReviewList = async function (restaurantId) {
-  const connection = await pool.getConnection(async (conn) => conn);
-  let reviewListResult = await restaurantDao.selectReviewByRestaurant(connection, restaurantId);
-  
-  connection.release();
-
-  return reviewListResult;
-};
-
-exports.retrieveReview = async function (reviewId) {
-    const connection = await pool.getConnection(async (conn) => conn);
-    let reviewResult = await restaurantDao.selectReview(connection, reviewId);
-    
-    connection.release();
-  
-    return reviewResult;
-  };

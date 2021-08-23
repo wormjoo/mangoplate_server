@@ -20,13 +20,4 @@ module.exports = function(app){
     // 15. 특정 식당 메뉴 조회 API
     app.get('/app/restaurants/:restaurantId/menu', restaurant.getRestaurantMenu);
 
-    // 16. 리뷰 작성 API
-    app.post('/app/reviews', restaurant.postReview);
-
-    // 17. 특정 식당 리뷰 조회 API
-    app.get('/app/reviews/:restaurantId', restaurant.getReviews);
-
-    // 18. 특정 리뷰 조회 API
-    app.get('/app/restaurants/reviews/:reviewId', restaurant.getReview);
-
 };
