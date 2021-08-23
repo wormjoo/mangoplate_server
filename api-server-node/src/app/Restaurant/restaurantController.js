@@ -70,6 +70,8 @@ exports.getRestaurants = async function (req, res) {
 
     const restaurantId = req.params.restaurantId;
 
+    if (!restaurantId) return res.send(errResponse(baseResponse.RESTAURANT_ID_EMPTY));
+
     const restaurantResult = await restaurantProvider.retrieveRestaurant(restaurantId);
     return res.send(response(baseResponse.SUCCESS, restaurantResult));
 };
@@ -87,6 +89,8 @@ exports.getRestaurants = async function (req, res) {
      */
 
     const userId = req.params.userId;
+
+    if(!userId) return res.send(response(baseResponse.USER_ID_EMPTY));
 
     const myRestaurantResult = await restaurantProvider.retrieveMyRestaurantList(userId);
     return res.send(response(baseResponse.SUCCESS, myRestaurantResult));
@@ -106,6 +110,8 @@ exports.getRestaurants = async function (req, res) {
 
     const restaurantId = req.params.restaurantId;
 
+    if (!restaurantId) return res.send(errResponse(baseResponse.RESTAURANT_ID_EMPTY));
+
     const restaurantInfoResult = await restaurantProvider.retrieveRestaurantInfo(restaurantId);
     return res.send(response(baseResponse.SUCCESS, restaurantInfoResult));
 };
@@ -123,6 +129,8 @@ exports.getRestaurants = async function (req, res) {
      */
 
     const restaurantId = req.params.restaurantId;
+
+    if (!restaurantId) return res.send(errResponse(baseResponse.RESTAURANT_ID_EMPTY));
 
     const restaurantMenuResult = await restaurantProvider.retrieveRestaurantMenu(restaurantId);
     return res.send(response(baseResponse.SUCCESS, restaurantMenuResult));
@@ -178,7 +186,7 @@ exports.getRestaurants = async function (req, res) {
  * [GET] /app/reviews/:restaurantId
  * path variable : restaurantId
  */
- exports.getReview = async function (req, res) {
+ exports.getReviews = async function (req, res) {
 
     /**
      * path variable : restaurantId
@@ -187,6 +195,25 @@ exports.getRestaurants = async function (req, res) {
 
     if (!restaurantId) return res.send(errResponse(baseResponse.RESTAURANT_ID_EMPTY));
 
-    const reviewByRestaurant = await restaurantProvider.retrieveReview(restaurantId);
+    const reviewByRestaurant = await restaurantProvider.retrieveReviewList(restaurantId);
     return res.send(response(baseResponse.SUCCESS, reviewByRestaurant));
+};
+
+/**
+ * API No. 17
+ * API Name : 특정 리뷰 조회 API 
+ * [GET] /app/restaurants/reviews/:reviewId
+ * path variable : reviewId
+ */
+ exports.getReview = async function (req, res) {
+
+    /**
+     * path variable: reviewId
+     */
+    const reviewId = req.params.reviewId;
+
+    if (!reviewId) return res.send(errResponse(baseResponse.REVIEW_ID_EMPTY));
+
+    const reviewResult = await restaurantProvider.retrieveReview(reviewId);
+    return res.send(response(baseResponse.SUCCESS, reviewResult));
 };

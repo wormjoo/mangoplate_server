@@ -27,7 +27,7 @@ async function selectRestaurant(connection, detailArea) {
   const selectRestaurantListQuery = `
       select @rownum:=@rownum+1 as number, A.*
       from (
-        select R.name, A.detailArea as area,
+        select R.id, R.name, A.detailArea as area,
              (select imageUrl from RestaurantImage RI where restaurantId = R.id order by RI.createAt desc limit 1) as imageUrl, R.views,
              (select count(*) from Review where restaurantId = R.id) as reviews,
              round((select avg(evaluation) from Review where restaurantId = R.id), 1) as rating
@@ -46,7 +46,7 @@ async function selectRestaurantByName(connection, detailArea, name) {
   const selectRestaurantByNameQuery = `
       select @rownum:=@rownum+1 as number, A.*
       from (
-        select R.name, A.detailArea as area,
+        select R.id, R.name, A.detailArea as area,
              (select imageUrl from RestaurantImage RI where restaurantId = R.id order by RI.createAt desc limit 1) as imageUrl, R.views,
              (select count(*) from Review where restaurantId = R.id) as reviews,
              round((select avg(evaluation) from Review where restaurantId = R.id), 1) as rating
@@ -120,7 +120,7 @@ async function insertReview(connection, insertReviewParams) {
 
 // 식당 아이디로 리뷰 조회
 async function selectReviewByRestaurant(connection, id) {
-  const selectRestaurantByNameQuery = `
+  const selectReviewByRestaurantQuery = `
       select U.nickname, U.profileImage, (select count(*) from Follower where userId = U.id) as followerCount, 
         (select count(*) from Review where userId = U.id) as reviewCount, U.holic,
         case evaluation
@@ -144,8 +144,8 @@ async function selectReviewByRestaurant(connection, id) {
       where R.restaurantId = ?
       group by R.id;              
       `;
-  const [restaurantByNameRows] = await connection.query(selectRestaurantByNameQuery, id);
-  return restaurantByNameRows;
+  const [reviewsRows] = await connection.query(selectReviewByRestaurantQuery, id);
+  return reviewsRows;
 }
 
 // 내가 등록한 식당 조회
@@ -194,6 +194,36 @@ async function selectRestaurantMenu(connection, restaurantId) {
   return menuRows;
 }
 
+// 리뷰 아이디로 특정 리뷰 조회
+async function selectReview(connection, id) {
+  const selectReviewQuery = `
+    select U.nickname, U.profileImage, (select count(*) from Follower where userId = U.id) as followerCount,
+      (select count(*) from Review where userId = U.id) as reviewCount, U.holic,
+      case evaluation
+      when 5 then '맛있다!'
+        when 3 then '괜찮다'
+        when 1 then '별로'
+      end as evaluation, R.content, group_concat(RI.imageUrl) as reviewImage,
+      (select count(*) from ReviewLike where reviewId = R.id) as likeCount, (select count(*) from ReviewComment where reviewId = R.id) as commentCount,
+      case
+        when timestampdiff(minute, R.createAt,current_timestamp()) < 60
+        then concat(timestampdiff(minute, R.createAt,current_timestamp()),' 분 전')
+        when timestampdiff(hour, R.createAt,current_timestamp()) < 24
+        then concat(timestampdiff(hour, R.createAt,current_timestamp()),' 시간 전')
+        when timestampdiff(day, R.createAt, current_timestamp()) < 8
+        then concat(timestampdiff(day, R.createAt, current_timestamp()),'일 전')
+        else date_format(R.createAt, '%Y-%m-%d')
+      end as date
+    from User U
+    left join Review R on R.userId = U.id
+    left join RestaurantImage RI on R.id = RI.reviewId
+    where R.id = ?
+    group by R.id;           
+    `;
+  const reviewRow = await connection.query(selectReviewQuery, id);
+  return reviewRow[0];
+}
+
 module.exports = {
   insertRestaurant,
   insertRestaurantImage,
@@ -206,5 +236,6 @@ module.exports = {
   updateViews,
   selectMyRestaurant,
   selectRestaurantInfo,
-  selectRestaurantMenu
+  selectRestaurantMenu,
+  selectReview
 };

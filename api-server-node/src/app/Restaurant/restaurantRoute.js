@@ -24,6 +24,9 @@ module.exports = function(app){
     app.post('/app/reviews', restaurant.postReview);
 
     // 17. 특정 식당 리뷰 조회 API
-    app.get('/app/reviews/:restaurantId', restaurant.getReview);
+    app.get('/app/reviews/:restaurantId', restaurant.getReviews);
+
+    // 18. 특정 리뷰 조회 API
+    app.get('/app/restaurants/reviews/:reviewId', restaurant.getReview);
 
 };
