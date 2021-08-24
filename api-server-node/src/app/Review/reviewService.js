@@ -68,3 +68,28 @@ exports.writeComment = async function (reviewId, userId, content) {
         return errResponse(baseResponse.DB_ERROR);
     }
 };
+
+exports.updateComment = async function (commentId, content) {
+    try {
+        const connection = await pool.getConnection(async (conn) => conn);
+
+        const commentCheck = await reviewDao.selectComment(connection, commentId);
+        if(commentCheck.length < 1) {
+            return errResponse(baseResponse.COMMENT_NOT_EXIST);
+        }
+                
+        if (!content) {
+            // 댓글 삭제
+            const deleteComment = await reviewDao.updateCommentStatus(connection, commentId);
+        } else {
+            // 댓글 수정
+            const editComment = await reviewDao.updateCommentContent(connection, commentId, content);;
+        }
+        connection.release();
+        return response(baseResponse.SUCCESS);
+
+    } catch (err) {
+        logger.error(`App - updateComment Service error\n: ${err.message}`);
+        return errResponse(baseResponse.DB_ERROR);
+    }
+};

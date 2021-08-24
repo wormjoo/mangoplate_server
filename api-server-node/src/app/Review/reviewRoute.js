@@ -20,4 +20,7 @@ module.exports = function(app){
     // 21. 특정 리뷰 댓글 조회 API
     app.get('/app/comments/:reviewId', review.getComments);
 
+    // 22. 댓글 수정 및 삭제 API
+    app.patch('/app/comments/:commentId', review.patchComment);
+    
 };

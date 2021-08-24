@@ -159,3 +159,25 @@ const {response, errResponse} = require("../../../config/response");
     const reviewCommentsResult = await reviewProvider.retrieveCommentList(reviewId);
     return res.send(response(baseResponse.SUCCESS, reviewCommentsResult));
 };
+
+/**
+ * API No. 22
+ * API Name : 댓글 수정 및 삭제 API
+ * [PATCH] /app/comments/:commentId
+ * path variable : commentId
+ * body: content
+ */
+ exports.patchComment = async function (req, res) {
+
+    /**
+     * path variable: commentId
+     * body: content
+     */
+    const commentId = req.params.commentId;
+    const content = req.body.content;
+
+    if (!commentId) return res.send(errResponse(baseResponse.COMMENT_ID_EMPTY));
+
+    const commentResult = await reviewService.updateComment(commentId, content);
+    return res.send(response(commentResult));
+};

@@ -134,6 +134,40 @@ async function selectCommentByReview(connection, reviewId) {
   return commentRows;
 }
 
+// 댓글 삭제
+async function updateCommentStatus(connection, id) {
+  const updateCommentStatusQuery = `
+      UPDATE ReviewComment
+      SET status = 'N' 
+      WHERE id = ?;
+      `;
+  const deleteCommentRow = await connection.query(updateCommentStatusQuery, id);
+  return deleteCommentRow[0];
+}
+
+// 댓글 수정
+async function updateCommentContent(connection, id, content) {
+  const updateCommentContentQuery = `
+      UPDATE ReviewComment
+      SET content = ?
+      WHERE id = ?
+      `;
+  const editCommentRow = await connection.query(updateCommentContentQuery, [content, id]);
+  return editCommentRow[0];
+}
+
+// 댓글 상태 확인
+async function selectComment(connection, id) {
+  const selectCommentQuery = `
+      SELECT *
+      FROM ReviewComment
+      WHERE status = 'Y'
+      AND id = ?
+      `;
+  const commentStatusRow = await connection.query(selectCommentQuery, id);
+  return commentStatusRow[0];
+}
+
 module.exports = {
   insertImage,
   insertReview,
@@ -142,5 +176,8 @@ module.exports = {
   updateReviewStatus,
   updateReviewContent,
   insertReviewComment,
-  selectCommentByReview
+  selectCommentByReview,
+  updateCommentStatus,
+  updateCommentContent,
+  selectComment,
 };

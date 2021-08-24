@@ -23,6 +23,7 @@ module.exports = {
     HOLIC_BADGE_ERROR_TYPE : { "isSuccess": false, "code": 2012, "message": "홀릭 배지 값을 확인해주세요." },
     RESTAURANT_ID_EMPTY : { "isSuccess": false, "code": 2013, "message": "식당 id가 입력되지 않았습니다." },
     REVIEW_ID_EMPTY : { "isSuccess": false, "code": 2014, "message": "리뷰 id가 입력되지 않았습니다." },
+    COMMENT_ID_EMPTY : { "isSuccess": false, "code": 2015, "message": "댓글 id가 입력되지 않았습니다." },
     
 
     // Response error
@@ -32,6 +33,7 @@ module.exports = {
     SIGNIN_WITHDRAWAL_ACCOUNT : { "isSuccess": false, "code": 3004, "message": "탈퇴 된 계정입니다. 고객센터에 문의해주세요." },
     ALREADY_EXIST_FOLLOW : { "isSuccess": false, "code": 3005, "message":"이미 존재하는 팔로우입니다." },
     FOLLOW_NOT_EXIST : { "isSuccess": false, "code": 3006, "message":"존재하지 않는 팔로우입니다." },
+    COMMENT_NOT_EXIST : { "isSuccess": false, "code": 3007, "message":"삭제된 댓글입니다." },
 
     //Connection, Transaction 등의 서버 오류
     DB_ERROR : { "isSuccess": false, "code": 4000, "message": "데이터 베이스 에러"},
