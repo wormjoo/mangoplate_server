@@ -27,7 +27,7 @@ async function selectRestaurant(connection, detailArea) {
   const selectRestaurantListQuery = `
       select @rownum:=@rownum+1 as number, A.*
       from (
-        select R.id, R.name, A.detailArea as area,
+        select R.id, R.name, A.detailArea as area, R.distance,
              (select imageUrl from RestaurantImage RI where restaurantId = R.id order by RI.createAt desc limit 1) as imageUrl, R.views,
              (select count(*) from Review where restaurantId = R.id) as reviews,
              round((select avg(evaluation) from Review where restaurantId = R.id), 1) as rating
@@ -46,7 +46,7 @@ async function selectRestaurantByName(connection, detailArea, name) {
   const selectRestaurantByNameQuery = `
       select @rownum:=@rownum+1 as number, A.*
       from (
-        select R.id, R.name, A.detailArea as area,
+        select R.id, R.name, A.detailArea as area, R.distance,
              (select imageUrl from RestaurantImage RI where restaurantId = R.id order by RI.createAt desc limit 1) as imageUrl, R.views,
              (select count(*) from Review where restaurantId = R.id) as reviews,
              round((select avg(evaluation) from Review where restaurantId = R.id), 1) as rating
