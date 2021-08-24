@@ -181,3 +181,27 @@ const {response, errResponse} = require("../../../config/response");
     const commentResult = await reviewService.updateComment(commentId, content);
     return res.send(response(commentResult));
 };
+
+/**
+ * API No. 36
+ * API Name : 리뷰 좋아요 API
+ * [POST] /app/like/:reviewId
+ * path variable: reviewId
+ * body: userId
+ */
+ exports.postLike = async function (req, res) {
+
+    /**
+     * path variable: reviewId
+     * body: userId
+     */
+
+    const reviewId = req.params.reviewId;
+    const userId = req.body.userId;
+
+    if (!reviewId) return res.send(errResponse(baseResponse.REVIEW_ID_EMPTY));
+    if (!userId) return res.send(response(baseResponse.USER_ID_EMPTY));
+
+    const reviewLikeResult = await reviewService.pressLike(reviewId, userId);
+    return res.send(response(baseResponse.SUCCESS));
+};

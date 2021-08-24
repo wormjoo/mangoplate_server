@@ -22,5 +22,8 @@ module.exports = function(app){
 
     // 22. 댓글 수정 및 삭제 API
     app.patch('/app/comments/:commentId', review.patchComment);
+
+    // 36. 리뷰 좋아요 API
+    app.post('/app/like/:reviewId', review.postLike);
     
 };

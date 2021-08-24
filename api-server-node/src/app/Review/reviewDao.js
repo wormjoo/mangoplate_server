@@ -1,3 +1,5 @@
+const { use } = require("passport");
+
 // 리뷰 + 이미지 생성
 async function insertImage(connection, imageParams) {
   const insertImageQuery = `
@@ -168,6 +170,39 @@ async function selectComment(connection, id) {
   return commentStatusRow[0];
 }
 
+// 좋아요 상태 확인
+async function selectLike(connection, reviewId, userId) {
+  const selectLikeQuery = `
+      SELECT *
+      FROM ReviewLike
+      WHERE reviewId = ?
+      AND userId = ?;
+      `;
+  const likeStatusRow = await connection.query(selectLikeQuery, [reviewId, userId]);
+  return likeStatusRow[0];
+}
+
+// 좋아요 추가
+async function insertLike(connection, reviewId, userId) {
+  const insertLikeQuery = `
+      INSERT INTO ReviewLike(reviewId, userId) 
+      VALUES(?, ?);
+      `;
+  const addLikeRow = await connection.query(insertLikeQuery, [reviewId, userId]);
+  return addLikeRow[0];
+}
+
+// 좋아요 상태 변경
+async function updateLike(connection, id, status) {
+  const updateLikeQuery = `
+      UPDATE ReviewLike
+      SET status = ?
+      WHERE id = ?;
+      `;
+  const editLikeStatusRow = await connection.query(updateLikeQuery, [status, id]);
+  return editLikeStatusRow[0];
+}
+
 module.exports = {
   insertImage,
   insertReview,
@@ -180,4 +215,7 @@ module.exports = {
   updateCommentStatus,
   updateCommentContent,
   selectComment,
+  selectLike,
+  insertLike,
+  updateLike
 };

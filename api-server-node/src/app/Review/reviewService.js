@@ -93,3 +93,29 @@ exports.updateComment = async function (commentId, content) {
         return errResponse(baseResponse.DB_ERROR);
     }
 };
+
+exports.pressLike = async function (reviewId, userId) {
+    try {        
+        const connection = await pool.getConnection(async (conn) => conn);
+
+        const likeCheck = await reviewDao.selectLike(connection, reviewId, userId);
+
+        if(likeCheck.length < 1) {
+            const addLike = await reviewDao.insertLike(connection, reviewId, userId);
+        } else {
+            if (likeCheck[0].status == 'Y') {
+                status = 'N'
+            } else {
+                status = 'Y'
+            }
+            const addLike = await reviewDao.updateLike(connection, likeCheck[0].id, status);
+        }
+        
+        connection.release();
+        return response(baseResponse.SUCCESS);
+
+    } catch (err) {
+        logger.error(`App - pressLike Service error\n: ${err.message}`);
+        return errResponse(baseResponse.DB_ERROR);
+    }
+};
