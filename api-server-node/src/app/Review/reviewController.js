@@ -89,7 +89,7 @@ const {response, errResponse} = require("../../../config/response");
 /**
  * API No. 19
  * API Name : 리뷰 수정 및 삭제 API
- * [GET] /app/restaurants/reviews/:reviewId
+ * [PATCH] /app/restaurants/reviews/:reviewId
  * path variable : reviewId
  * body: content, evaluation
  */
@@ -204,4 +204,23 @@ const {response, errResponse} = require("../../../config/response");
 
     const reviewLikeResult = await reviewService.pressLike(reviewId, userId);
     return res.send(response(baseResponse.SUCCESS));
+};
+
+/**
+ * API No. 37
+ * API Name : 특정 리뷰 좋아요 누른 유저 조회 API 
+ * [GET] /app/likes/:reviewId
+ * path variable : reviewId
+ */
+ exports.getLikeUsers = async function (req, res) {
+
+    /**
+     * path variable: reviewId
+     */
+    const reviewId = req.params.reviewId;
+
+    if (!reviewId) return res.send(errResponse(baseResponse.REVIEW_ID_EMPTY));
+
+    const likeUserResult = await reviewProvider.retrieveLikeUserList(reviewId);
+    return res.send(response(baseResponse.SUCCESS, likeUserResult));
 };

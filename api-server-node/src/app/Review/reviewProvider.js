@@ -33,3 +33,12 @@ exports.retrieveCommentList = async function (reviewId) {
   
     return commentListResult;
 };
+
+exports.retrieveLikeUserList = async function (reviewId) {
+  const connection = await pool.getConnection(async (conn) => conn);
+  let likeUserListResult = await reviewDao.selectLikeUser(connection, reviewId);
+  
+  connection.release();
+
+  return likeUserListResult;
+};

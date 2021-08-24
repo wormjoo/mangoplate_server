@@ -203,6 +203,21 @@ async function updateLike(connection, id, status) {
   return editLikeStatusRow[0];
 }
 
+// 좋아요 누른 유저 조회
+async function selectLikeUser(connection, reviewId) {
+  const selectLikeUserQuery = `
+      select U.id, U.nickname, U.profileImage, U.holic,
+        (select count(id) from Review where userId = U.id) as reviews,
+        (select count(followerId) from Follower where userId = U.id) as followers
+      from ReviewLike RL
+      join User U on U.id = RL.userId
+      where RL.status = 'Y'
+      AND RL.reviewId = ?;
+      `;
+  const [likeUserRows] = await connection.query(selectLikeUserQuery, reviewId);
+  return likeUserRows;
+}
+
 module.exports = {
   insertImage,
   insertReview,
@@ -217,5 +232,6 @@ module.exports = {
   selectComment,
   selectLike,
   insertLike,
-  updateLike
+  updateLike,
+  selectLikeUser
 };
