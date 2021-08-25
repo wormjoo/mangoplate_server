@@ -35,3 +35,16 @@
 {"message":"undefined - API Server Start At Port 3000","level":"info","timestamp":"2021-08-25 21:20:28"}
 {"message":"undefined - API Server Start At Port 3000","level":"info","timestamp":"2021-08-25 21:21:36"}
 {"message":"undefined - API Server Start At Port 3000","level":"info","timestamp":"2021-08-25 21:22:01"}
+{"message":"undefined - API Server Start At Port 3000","level":"info","timestamp":"2021-08-25 23:10:00"}
+{"message":"undefined - API Server Start At Port 3000","level":"info","timestamp":"2021-08-25 23:10:42"}
+{"message":"undefined - API Server Start At Port 3000","level":"info","timestamp":"2021-08-25 23:13:29"}
+{"message":"undefined - API Server Start At Port 3000","level":"info","timestamp":"2021-08-25 23:13:45"}
+{"message":"undefined - API Server Start At Port 3000","level":"info","timestamp":"2021-08-25 23:13:58"}
+{"message":"undefined - API Server Start At Port undefined","level":"info","timestamp":"2021-08-25 23:31:34"}
+{"message":"=development - API Server Start At Port undefined","level":"info","timestamp":"2021-08-25 23:33:46"}
+{"message":"undefined - API Server Start At Port 3000","level":"info","timestamp":"2021-08-25 23:34:15"}
+{"message":"undefined - API Server Start At Port 3000","level":"info","timestamp":"2021-08-25 23:34:55"}
+{"message":"undefined - API Server Start At Port 3000","level":"info","timestamp":"2021-08-25 23:35:11"}
+{"message":"App - pressStar Service error\n: wannaGoDao.selectLike is not a function","level":"error","timestamp":"2021-08-25 23:35:12"}
+{"message":"undefined - API Server Start At Port 3000","level":"info","timestamp":"2021-08-25 23:35:36"}
+{"message":"undefined - API Server Start At Port 3000","level":"info","timestamp":"2021-08-25 23:59:31"}

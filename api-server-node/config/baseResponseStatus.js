@@ -35,6 +35,8 @@ module.exports = {
     ALREADY_EXIST_FOLLOW : { "isSuccess": false, "code": 3005, "message":"이미 존재하는 팔로우입니다." },
     FOLLOW_NOT_EXIST : { "isSuccess": false, "code": 3006, "message":"존재하지 않는 팔로우입니다." },
     COMMENT_NOT_EXIST : { "isSuccess": false, "code": 3007, "message":"삭제된 댓글입니다." },
+    USER_ID_NOT_EXIST : { "isSuccess": false, "code": 3008, "message":"존재하지 않는 유저 id입니다." },
+    RESTAURANT_ID_NOT_EXIST : { "isSuccess": false, "code": 3009, "message":"존재하지 않는 식당 id입니다." },
 
     //Connection, Transaction 등의 서버 오류
     DB_ERROR : { "isSuccess": false, "code": 4000, "message": "데이터 베이스 에러"},

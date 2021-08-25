@@ -64,7 +64,7 @@ async function selectRestaurantByName(connection, detailArea, name) {
 // 특정 식당 아이디로 조회
 async function selectRestaurantById(connection, id) {
   const selectRestaurantByIdQuery = `
-      select R.name as name, R.address1 as address, R.callNumber as callNumber,
+      select R.name as name, R.address1 as roadNameAddress, R.address2 as lotNumberAddress, R.callNumber as callNumber,
           (select group_concat(imageUrl) from RestaurantImage where restaurantId = R.id) as imageUrl, R.views as views,
           (select count(*) from Review where restaurantId = R.id) as reviews,
           (select count(*) from WannaGo where restaurantId = R.id) as starCount,
