@@ -42,3 +42,27 @@ exports.retrieveLikeUserList = async function (reviewId) {
 
   return likeUserListResult;
 };
+
+exports.retrieveNews = async function (evaluationParams, area){
+  if (!area) {
+    const connection = await pool.getConnection(async (conn) => conn);
+    let newsListResult = await reviewDao.selectNews(connection, evaluationParams);
+  
+    connection.release();
+
+    return newsListResult;
+  } else {
+    const connection = await pool.getConnection(async (conn) => conn);
+    const selectNewsByAreaParams = [];
+    for (var i = 0; i < 3; i++) {
+      selectNewsByAreaParams.push(evaluationParams[i]);
+    }
+    selectNewsByAreaParams.push(area);
+    console.log(selectNewsByAreaParams);
+    let newsListResult = await reviewDao.selectNewsByArea(connection, selectNewsByAreaParams);
+  
+    connection.release();
+
+    return newsListResult;
+  }
+};

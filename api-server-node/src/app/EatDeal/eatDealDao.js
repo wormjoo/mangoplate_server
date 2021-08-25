@@ -8,7 +8,7 @@ async function selectEatDeal(connection, detailArea) {
       join Restaurant R on E.restaurantId = R.id
       join Area A on R.areaId = A.id
       where A.detailArea = ?
-      and E.status. = 'Y';
+      and E.status = 'Y';
       `;
   const [eatDealRows] = await connection.query(selectEatDealQuery, detailArea);
   return eatDealRows;

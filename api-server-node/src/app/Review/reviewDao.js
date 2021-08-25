@@ -31,7 +31,7 @@ async function insertReview(connection, insertReviewParams) {
 // 식당 아이디로 리뷰 조회
 async function selectReviewByRestaurant(connection, id) {
   const selectReviewByRestaurantQuery = `
-      select U.nickname, U.profileImage, (select count(*) from Follower where userId = U.id) as followerCount, 
+      select R.id, U.nickname, U.profileImage, (select count(*) from Follower where userId = U.id) as followerCount, 
         (select count(*) from Review where userId = U.id) as reviewCount, U.holic,
         case evaluation
           when 5 then '맛있다!'
@@ -61,7 +61,7 @@ async function selectReviewByRestaurant(connection, id) {
 // 리뷰 아이디로 특정 리뷰 조회
 async function selectReview(connection, id) {
   const selectReviewQuery = `
-    select U.nickname, U.profileImage, (select count(*) from Follower where userId = U.id) as followerCount,
+    select R.id, U.nickname, U.profileImage, (select count(*) from Follower where userId = U.id) as followerCount,
       (select count(*) from Review where userId = U.id) as reviewCount, U.holic,
       case evaluation
       when 5 then '맛있다!'
@@ -218,6 +218,72 @@ async function selectLikeUser(connection, reviewId) {
   return likeUserRows;
 }
 
+// 전체 지역 소식 조회
+async function selectNews(connection, evaluationParams) {
+  const selectNewsQuery = `
+      select R.id, U.nickname, U.profileImage, (select count(*) from Follower where userId = U.id) as followerCount,
+        (select count(*) from Review where userId = U.id) as reviewCount, U.holic,
+        case evaluation
+          when 5 then '맛있다!'
+          when 3 then '괜찮다'
+          when 1 then '별로'
+        end as evaluation, R.content, group_concat(RI.imageUrl) as reviewImage,
+        (select count(*) from ReviewLike where reviewId = R.id) as likeCount, (select count(*) from ReviewComment where reviewId = R.id) as commentCount,
+        case
+          when timestampdiff(minute, R.createAt,current_timestamp()) < 60
+          then concat(timestampdiff(minute, R.createAt,current_timestamp()),' 분 전')
+          when timestampdiff(hour, R.createAt,current_timestamp()) < 24
+          then concat(timestampdiff(hour, R.createAt,current_timestamp()),' 시간 전')
+          when timestampdiff(day, R.createAt, current_timestamp()) < 8
+          then concat(timestampdiff(day, R.createAt, current_timestamp()),'일 전')
+          else date_format(R.createAt, '%Y-%m-%d')
+        end as date
+      from User U
+      left join Review R on R.userId = U.id
+      left join RestaurantImage RI on R.id = RI.reviewId
+      where evaluation in (?, ?, ?)
+      group by R.id;
+      `;
+  const [newsRows] = await connection.query(selectNewsQuery, evaluationParams);
+  return newsRows;
+}
+
+// 선택 지역 소식 조회
+async function selectNewsByArea(connection, selectNewsByAreaParams) {
+  const selectNewsByAreaQuery = `
+      select R.id, U.nickname, U.profileImage, (select count(*) from Follower where userId = U.id) as followerCount,
+        (select count(*) from Review where userId = U.id) as reviewCount, U.holic,
+        case evaluation
+          when 5 then '맛있다!'
+          when 3 then '괜찮다'
+          when 1 then '별로'
+        end as evaluation, R.content, group_concat(RI.imageUrl) as reviewImage,
+        (select count(*) from ReviewLike where reviewId = R.id) as likeCount, (select count(*) from ReviewComment where reviewId = R.id) as commentCount,
+        case
+          when timestampdiff(minute, R.createAt,current_timestamp()) < 60
+          then concat(timestampdiff(minute, R.createAt,current_timestamp()),' 분 전')
+          when timestampdiff(hour, R.createAt,current_timestamp()) < 24
+          then concat(timestampdiff(hour, R.createAt,current_timestamp()),' 시간 전')
+          when timestampdiff(day, R.createAt, current_timestamp()) < 8
+          then concat(timestampdiff(day, R.createAt, current_timestamp()),'일 전')
+          else date_format(R.createAt, '%Y-%m-%d')
+        end as date
+      from User U
+      left join Review R on R.userId = U.id
+      left join RestaurantImage RI on R.id = RI.reviewId
+      join Restaurant R2 on R.restaurantId = R2.id
+      join Area A on R2.areaId = A.id
+      where evaluation in (?, ?, ?)
+      and A.detailArea = ?
+      group by R.id;
+      `;
+  const [newsByAreaRows] = await connection.query(
+    selectNewsByAreaQuery, 
+    selectNewsByAreaParams
+  );
+  return newsByAreaRows;
+}
+
 module.exports = {
   insertImage,
   insertReview,
@@ -233,5 +299,7 @@ module.exports = {
   selectLike,
   insertLike,
   updateLike,
-  selectLikeUser
+  selectLikeUser,
+  selectNews,
+  selectNewsByArea
 };

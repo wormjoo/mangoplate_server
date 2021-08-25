@@ -224,3 +224,51 @@ const {response, errResponse} = require("../../../config/response");
     const likeUserResult = await reviewProvider.retrieveLikeUserList(reviewId);
     return res.send(response(baseResponse.SUCCESS, likeUserResult));
 };
+
+/**
+ * API No. 50
+ * API Name : 소식 리스트 조회 API
+ * [GET] /app/news
+ */
+ exports.getNews = async function (req, res) {
+
+    /**
+     * Query String: area, evaluation
+     */
+    var evaluation = req.query.evaluation;
+    const area = req.query.area;
+    let evaluationParams = [];
+
+    if(!evaluation) {
+        evaluationParams = [5, 5, 5];
+    } else {
+        var evaluationStr = evaluation.split(',');
+
+        for(var i = 0; i < evaluationStr.length; i++) {
+            // 평가도 점수로 변환
+            if (evaluationStr[i] == '맛있다!') {
+                evaluationStr[i] = 5;
+            } else if (evaluationStr[i] == '괜찮다') {
+                evaluationStr[i] = 3;
+            } else if (evaluationStr[i] == '별로') {
+                evaluationStr[i] = 1;
+            }
+            evaluationParams.push(evaluationStr[i]);
+        }
+
+        for (var i = 0; i < 3; i++) {
+            if (!evaluationParams[i])
+                evaluationParams[i] = 5;
+        }
+    }
+
+    if (!area) {
+        // 전체 지역 조회
+        const newsResult = await reviewProvider.retrieveNews(evaluationParams);
+        return res.send(response(baseResponse.SUCCESS, newsResult));
+    } else {
+        // 특정 지역 조회
+        const newsResult = await reviewProvider.retrieveNews(evaluationParams, area);
+        return res.send(response(baseResponse.SUCCESS, newsResult));
+    }
+};

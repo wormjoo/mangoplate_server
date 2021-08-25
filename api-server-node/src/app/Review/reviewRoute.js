@@ -28,5 +28,8 @@ module.exports = function(app){
 
     // 37. 특정 리뷰 좋아요 누른 유저 조회 API
     app.get('/app/likes/:reviewId', review.getLikeUsers);
+
+    // 50. 소식 리스트 조회 API
+    app.get('/app/news', review.getNews);
     
 };
