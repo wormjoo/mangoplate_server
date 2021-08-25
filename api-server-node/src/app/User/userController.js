@@ -12,6 +12,9 @@ const passport = require('passport')
 const KakaoStrategy = require('passport-kakao').Strategy
 const axios = require('axios')
 
+const Cache = require('memory-cache');
+const CryptoJS = require('crypto-js');
+
 /**
  * API No. 1
  * API Name : 이메일 조회 API 
@@ -389,4 +392,117 @@ exports.login = async function (req, res) {
     //} 
     const editUserProfileImageResult = await userService.editUserProfileImage(userId, profileImage);
     return res.send(editUserProfileImageResult);
+};
+
+/**
+ * API No. 49
+ * API Name : 휴대폰 인증 번호 발송 API
+ * Body : phoneNumber
+ */
+ const NCP_serviceID = 'ncp:sms:kr:271191359133:mangoplate_project';
+ const NCP_accessKey = 'N4Bj3MzJL8wNwWqK4aVQ';
+ const NCP_secretKey = '2gomYuV0n7wRpJcQqR66WNEpKaBzNEV9VCXQsOJj';
+ const date = Date.now().toString();
+const uri = NCP_serviceID;
+const secretKey = NCP_secretKey;
+const accessKey = NCP_accessKey;
+const method = 'POST';
+const space = " ";
+const newLine = "\n";
+const url = `https://sens.apigw.ntruss.com/sms/v2/services/${uri}/messages`;
+const url2 = `/sms/v2/services/${uri}/messages`;
+
+const  hmac = CryptoJS.algo.HMAC.create(CryptoJS.algo.SHA256, secretKey);
+
+hmac.update(method);
+hmac.update(space);
+hmac.update(url2);
+hmac.update(newLine);
+hmac.update(date);
+hmac.update(newLine);
+hmac.update(accessKey);
+
+const hash = hmac.finalize();
+const signature = hash.toString(CryptoJS.enc.Base64);
+
+exports.send = async function (req, res) {
+    const phoneNumber = req.body.phoneNumber;
+  
+    Cache.del(phoneNumber);
+  
+    //인증번호 생성
+    const verifyCode = Math.floor(Math.random() * (999999 - 100000)) + 100000;
+  
+    Cache.put(phoneNumber, verifyCode.toString());
+  
+    axios({
+      method: method,
+      json: true,
+      url: url,
+      headers: {
+        'Content-Type': 'application/json',
+        'x-ncp-iam-access-key': accessKey,
+        'x-ncp-apigw-timestamp': date,
+        'x-ncp-apigw-signature-v2': signature,
+      },
+      data: {
+        type: 'SMS',
+        contentType: 'COMM',
+        countryCode: '82',
+        from: '01071701824',
+        content: `[본인 확인] 망고플레이트 인증번호 [${verifyCode}]를 입력해주세요.`,
+        messages: [
+          {
+            to: `${phoneNumber}`,
+          },
+        ],
+      }, 
+      // function(err, res, html) {
+        // if(err) console.log(err);
+        // else {
+          // resultCode = 200;
+          // console.log(html);
+        // }
+      })
+    .then(function (res) {
+      console.log('response',res.data, res['data']);
+      return res.send(response(baseResponse.PHONE_SEND_SUCCESS))
+
+      //res.json({isSuccess: true, code: 202, message: "본인인증 문자 발송 성공", result: res.data });
+    })
+    .catch((err) => {
+      console.log(err.res);
+      if(err.res == undefined){
+        return res.send(response(baseResponse.PHONE_SEND_SUCCESS))
+        //res.json({isSuccess: true, code: 200, message: "본인인증 문자 발송 성공", result: res.data });
+      }
+      else {
+        return res.send(response(baseResponse.PHONE_SEND_FAIL))
+        //res.json({isSuccess: true, code: 204, message: "본인인증 문자 발송에 문제가 있습니다.", result: err.res });
+      }
+    });
+};
+
+/**
+ * API No. 49
+ * API Name : 휴대폰 인증 번호 발송 API
+ * Body : phoneNumber, ver
+ */
+exports.verify = async function (req, res) {
+    const phoneNumber = req.body.phoneNumber;
+    const verifyCode = req.body.verifyCode;
+
+    const CacheData = Cache.get(phoneNumber);
+
+    if (!CacheData) {
+      return res.send(response(baseResponse.PHONE_VERIFY_FAIL));
+      //return res.send('fail');
+    } else if (CacheData !== verifyCode) {
+      return res.send(response(baseResponse.PHONE_VERIFY_FAIL));
+      //return res.send('fail');
+    } else {
+      Cache.del(phoneNumber);
+      return res.send(response(baseResponse.PHONE_VERIFY_SUCCESS));
+      //return res.send('success');
+    }
 };

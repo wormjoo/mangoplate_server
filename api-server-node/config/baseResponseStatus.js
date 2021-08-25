@@ -6,7 +6,11 @@ module.exports = {
     // Common
     TOKEN_EMPTY : { "isSuccess": false, "code": 2000, "message":"JWT 토큰을 입력해주세요." },
     TOKEN_VERIFICATION_FAILURE : { "isSuccess": false, "code": 3000, "message":"JWT 토큰 검증 실패" },
-    TOKEN_VERIFICATION_SUCCESS : { "isSuccess": true, "code": 1001, "message":"JWT 토큰 검증 성공" }, // ?
+    TOKEN_VERIFICATION_SUCCESS : { "isSuccess": true, "code": 1001, "message":"JWT 토큰 검증 성공" },
+    PHONE_SEND_SUCCESS: { "isSuccess": true, "code": 1002, "message": "본인인증 문자 발송 성공" },
+    PHONE_VERIFY_SUCCESS: { "isSuccess": true, "code": 1003, "message": "본인인증에 성공하였습니다." },
+    PHONE_SEND_FAIL: { "isSuccess": false, "code": 2017, "message": "본인인증 문자 발송에 문제가 있습니다." },
+    PHONE_VERIFY_FAIL: { "isSuccess": false, "code": 2017, "message": "본인인증에 실패하였습니다." },
 
     //Request error
     SIGNUP_EMAIL_EMPTY : { "isSuccess": false, "code": 2001, "message":"이메일을 입력해주세요" },
@@ -25,7 +29,8 @@ module.exports = {
     REVIEW_ID_EMPTY : { "isSuccess": false, "code": 2014, "message": "리뷰 id가 입력되지 않았습니다." },
     COMMENT_ID_EMPTY : { "isSuccess": false, "code": 2015, "message": "댓글 id가 입력되지 않았습니다." },
     EATDEAL_ID_EMPTY : { "isSuccess": false, "code": 2016, "message": "잇딜 id가 입력되지 않았습니다." },
-
+    
+    
 
     // Response error
     SIGNUP_REDUNDANT_EMAIL : { "isSuccess": false, "code": 3001, "message":"중복된 이메일입니다." },

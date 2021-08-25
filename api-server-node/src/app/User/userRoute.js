@@ -57,6 +57,12 @@ module.exports = function(app){
     // 47. 유저 정보 수정 (프로필이미지) API
     app.patch('/app/:userId/profile-image', user.patchProfileImage);
 
+    // 49. 휴대폰 인증 번호 발송 API
+    app.post('/app/send', user.send);
+
+    // 50. 휴대폰 인증 확인 API
+    app.post('/app/verify', user.verify);
+
 };
 
 
