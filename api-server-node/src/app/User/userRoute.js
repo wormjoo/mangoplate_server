@@ -25,19 +25,19 @@ module.exports = function(app){
     app.post('/kakao/login', user.kakaoSignIn);
 
     // 8. 로그아웃 하기 API
-    //app.post('/app/logout', user.logout);
+    app.post('/app/logout', jwtMiddleware, user.logout);
 
     // 9. 회원 탈퇴 API
-    app.patch('/app/withdraw/:userId', user.withdrawal);
+    app.patch('/app/withdraw/:userId', jwtMiddleware, user.withdrawal);
 
     // 10. 유저 정보 수정 API (JWT 검증 및 Validation - 메소드 체이닝 방식으로 jwtMiddleware 사용)
     // app.patch('/app/users/:userId', jwtMiddleware, user.patchUsers);
 
     // 32. 팔로우 추가 API
-    app.post('/app/follower', user.postFollower);
+    app.post('/app/follower', jwtMiddleware, user.postFollower);
 
     // 33. 팔로우 취소 API
-    app.delete('/app/follower/:followerId', user.deleteFollow);
+    app.delete('/app/follower/:followerId', jwtMiddleware, user.deleteFollow);
 
     // 34. 팔로워 조회 API
     app.get('/app/followers', user.getFollowers);
@@ -46,23 +46,22 @@ module.exports = function(app){
     app.get('/app/followings', user.getFollowings);
 
     // 44. 유저 정보 수정 (닉네임) API
-    app.patch('/app/:userId/nickname', user.patchName);
+    app.patch('/app/:userId/nickname', jwtMiddleware, user.patchName);
 
     // 45. 유저 정보 수정 (전화번호) API
-    app.patch('/app/:userId/phone-number', user.patchPhoneNumber);
+    app.patch('/app/:userId/phone-number', jwtMiddleware, user.patchPhoneNumber);
 
     // 46. 유저 정보 수정 (이메일) API
-    // app.patch('/app/:userId/email', user.patchEmail);
+    // app.patch('/app/:userId/email', jwtMiddleware, user.patchEmail);
 
     // 47. 유저 정보 수정 (프로필이미지) API
-    app.patch('/app/:userId/profile-image', user.patchProfileImage);
+    app.patch('/app/:userId/profile-image', jwtMiddleware, user.patchProfileImage);
 
     // 49. 휴대폰 인증 번호 발송 API
     app.post('/app/send', user.send);
 
     // 50. 휴대폰 인증 확인 API
     app.post('/app/verify', user.verify);
-
 };
 
 

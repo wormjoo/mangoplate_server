@@ -6,3 +6,30 @@
 {"message":"undefined - API Server Start At Port 3000","level":"info","timestamp":"2021-08-26 02:45:05"}
 {"message":"undefined - API Server Start At Port 3000","level":"info","timestamp":"2021-08-26 02:45:37"}
 {"message":"undefined - API Server Start At Port 3000","level":"info","timestamp":"2021-08-26 03:00:18"}
+{"message":"undefined - API Server Start At Port 3000","level":"info","timestamp":"2021-08-26 04:32:36"}
+{"message":"undefined - API Server Start At Port 3000","level":"info","timestamp":"2021-08-26 04:33:19"}
+{"message":"App - postSignIn Service error\n: userId is not defined \n{}","level":"error","timestamp":"2021-08-26 04:33:29"}
+{"message":"undefined - API Server Start At Port 3000","level":"info","timestamp":"2021-08-26 04:36:00"}
+{"message":"App - postSignIn Service error\n: userId is not defined \n{}","level":"error","timestamp":"2021-08-26 04:36:20"}
+{"message":"undefined - API Server Start At Port 3000","level":"info","timestamp":"2021-08-26 04:37:56"}
+{"message":"undefined - API Server Start At Port 3000","level":"info","timestamp":"2021-08-26 04:38:42"}
+{"message":"App - postSignIn Service error\n: userId is not defined \n{}","level":"error","timestamp":"2021-08-26 04:38:43"}
+{"message":"undefined - API Server Start At Port 3000","level":"info","timestamp":"2021-08-26 04:39:16"}
+{"message":"App - postSignIn Service error\n: userId is not defined \n{}","level":"error","timestamp":"2021-08-26 04:39:18"}
+{"message":"undefined - API Server Start At Port 3000","level":"info","timestamp":"2021-08-26 04:40:04"}
+{"message":"undefined - API Server Start At Port 3000","level":"info","timestamp":"2021-08-26 04:49:47"}
+{"message":"App - Logout Service error\n: Table 'mangoplateDB.Jwt' doesn't exist","level":"error","timestamp":"2021-08-26 04:49:49"}
+{"message":"undefined - API Server Start At Port 3000","level":"info","timestamp":"2021-08-26 04:52:26"}
+{"message":"undefined - API Server Start At Port 3000","level":"info","timestamp":"2021-08-26 04:53:03"}
+{"message":"App - Logout Service error\n: Cannot destructure property `isSuccess` of 'undefined' or 'null'.","level":"error","timestamp":"2021-08-26 04:53:11"}
+{"message":"undefined - API Server Start At Port 3000","level":"info","timestamp":"2021-08-26 04:54:08"}
+{"message":"undefined - API Server Start At Port 3000","level":"info","timestamp":"2021-08-26 04:59:01"}
+{"message":"App - postSignIn Service error\n: userId is not defined \n{}","level":"error","timestamp":"2021-08-26 04:59:08"}
+{"message":"undefined - API Server Start At Port 3000","level":"info","timestamp":"2021-08-26 04:59:35"}
+{"message":"App - postSignIn Service error\n: userId is not defined \n{}","level":"error","timestamp":"2021-08-26 04:59:36"}
+{"message":"undefined - API Server Start At Port 3000","level":"info","timestamp":"2021-08-26 04:59:56"}
+{"message":"App - Logout Service error\n: loginUserRow is not defined","level":"error","timestamp":"2021-08-26 05:00:15"}
+{"message":"undefined - API Server Start At Port 3000","level":"info","timestamp":"2021-08-26 05:00:48"}
+{"message":"undefined - API Server Start At Port 3000","level":"info","timestamp":"2021-08-26 05:02:02"}
+{"message":"undefined - API Server Start At Port 3000","level":"info","timestamp":"2021-08-26 05:02:12"}
+{"message":"undefined - API Server Start At Port 3000","level":"info","timestamp":"2021-08-26 05:02:46"}

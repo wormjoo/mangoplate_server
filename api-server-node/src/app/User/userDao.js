@@ -155,6 +155,7 @@ async function selectFollow(connection, userId, followerId) {
   return selectFollowRow;
 }
 
+// 유저 계정 상태
 async function updateUserStatus(connection, id) {
   const updateUserQuery = `
       UPDATE User
@@ -165,6 +166,7 @@ async function updateUserStatus(connection, id) {
   return updateUserRow[0];
 }
 
+// 닉네임 업데이트
 async function updateUserName(connection, nickname, id) {
   const updateUserNicknameQuery = `
       UPDATE User
@@ -175,6 +177,7 @@ async function updateUserName(connection, nickname, id) {
   return updateUserNicknameRow[0];
 }
 
+// 휴대폰 번호 업데이트
 async function updateUserPhoneNumber(connection, phoneNumber, id) {
   const updateUserPhoneNumberQuery = `
       UPDATE User
@@ -185,6 +188,7 @@ async function updateUserPhoneNumber(connection, phoneNumber, id) {
   return updateUserPhoneNumberRow[0];
 }
 
+// 프로필이미지 업데이트
 async function updateUserProfileImage(connection, profileImage, id) {
   const updateUserProfileImageQuery = `
       UPDATE User
@@ -195,6 +199,7 @@ async function updateUserProfileImage(connection, profileImage, id) {
   return updateUserProfileImageRow[0];
 }
 
+// 홀릭배지 업데이트
 async function updateUserHolic(connection, id, holic) {
   const updateUserHolicQuery = `
       UPDATE User
@@ -203,6 +208,42 @@ async function updateUserHolic(connection, id, holic) {
       `;
   const updateUserHolicRow = await connection.query(updateUserHolicQuery, [holic, id]);
   return updateUserHolicRow[0];
+}
+
+// 로그인된 유저 생성
+async function insertLogin(connection, userId, token) {
+  const insertJwtQuery = `
+      INSERT INTO Login(userId, token) VALUES(?,?);
+      `;
+  const insertJwtRow = await connection.query(insertJwtQuery, [userId, token]);
+  return insertJwtRow;
+}
+
+// 로그인 상태 업데이트
+async function updateJwtStatus(connection, userId) {
+  const updateJwtStatusQuery = `
+      UPDATE Login SET status='O' where userId = ?;
+      `;
+  const updateJwtStatusRow = await connection.query(updateJwtStatusQuery, userId);
+  return updateJwtStatusRow[0];
+}
+
+// 로그인된 유저 조회
+async function selectLoginUser(connection, userId) {
+  const selectJwtQuery = `
+      SELECT userId, status FROM Login WHERE userId = ?;
+      `;
+  const selectJwtRow = await connection.query(selectJwtQuery, userId);
+  return selectJwtRow[0];
+}
+
+//jwt token 업데이트
+async function updateJwtToken(connection, userId, token) {
+  const updateJwtTokenQuery = `
+  UPDATE Login SET token=?, status='I' where userId = ?;
+  `;
+  const updateJwtTokenRow = await connection.query(updateJwtTokenQuery, [token, userId]);
+  return updateJwtTokenRow;
 }
 
 module.exports = {
@@ -221,5 +262,9 @@ module.exports = {
   updateUserName,
   updateUserPhoneNumber,
   updateUserProfileImage,
-  updateUserHolic
+  updateUserHolic,
+  insertLogin,
+  updateJwtStatus,
+  selectLoginUser,
+  updateJwtToken
 };

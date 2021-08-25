@@ -27,6 +27,10 @@ const CryptoJS = require('crypto-js');
      */
     const email = req.query.email;
 
+    if (!email) {
+        return res.send(response(baseResponse.EMAIL_EMPTY));
+    }
+
     const userEmailResult = await userProvider.emailCheck(email);
     if (!userEmailResult[0]) {
         return res.send(response(baseResponse.SUCCESS));
@@ -138,8 +142,6 @@ exports.login = async function (req, res) {
 
     const {email, password} = req.body;
 
-    // TODO: email, password 형식적 Validation
-
     const signInResponse = await userService.postSignIn(email, password);
 
     return res.send(signInResponse);
@@ -154,9 +156,7 @@ exports.login = async function (req, res) {
  */
  exports.patchHolic = async function (req, res) {
 
-    // jwt - userId, path variable :userId
-
-    //const userIdFromJWT = req.verifiedToken.userId;
+    // path variable :userId
 
     const userId = req.params.userId;
     let holic = req.body.holic;
@@ -171,9 +171,6 @@ exports.login = async function (req, res) {
         return res.send(response(baseResponse.HOLIC_BADGE_ERROR_TYPE));
     }
 
-    //if (userIdFromJWT != userId) {
-    //    res.send(errResponse(baseResponse.USER_ID_NOT_MATCH));
-    //} 
     const userHolicResponse = await userService.holicBadge(userId, holic);
     return res.send(userHolicResponse);
 };
@@ -229,6 +226,21 @@ exports.login = async function (req, res) {
 };
 
 /**
+ * API No. 8
+ * API Name : 로그아웃 API
+ * [PATCH] /app/logout
+ */
+ exports.logout = async function (req, res) {
+    // jwt - userId
+
+    const userIdFromJWT = req.verifiedToken.userId;
+  
+    const logoutResponse = await userService.patchJwtStatus(userIdFromJWT);
+  
+    return res.send(logoutResponse);
+  };
+
+/**
  * API No. 9
  * API Name : 회원 탈퇴 API
  * [PATCH] /app/withdraw/:userId
@@ -238,13 +250,14 @@ exports.login = async function (req, res) {
 
     // jwt - userId, path variable :userId
 
-    //const userIdFromJWT = req.verifiedToken.userId;
-
     const userId = req.params.userId;
+    const userIdFromJWT = req.verifiedToken.userId;
 
-    //if (userIdFromJWT != userId) {
-    //    res.send(errResponse(baseResponse.USER_ID_NOT_MATCH));
-    //} 
+    if (!userId) return res.send(errResponse(baseResponse.USER_ID_EMPTY));
+
+    if (userIdFromJWT != userId) {
+        res.send(errResponse(baseResponse.USER_ID_NOT_MATCH));
+    } 
     const userWithdraw = await userService.withdraw(userId);
     return res.send(userWithdraw);
 };
@@ -256,13 +269,20 @@ exports.login = async function (req, res) {
  */
  exports.postFollower = async function (req, res) {
 
+    // jwt - userId
+
     /**
      * Body: userId, followerId
      */
     const {userId, followerId} = req.body;
+    const userIdFromJWT = req.verifiedToken.userId;
 
     if (!userId) return res.send(errResponse(baseResponse.USER_ID_EMPTY));
     if (!followerId) return res.send(errResponse(baseResponse.FOLLOWER_ID_EMPTY));
+
+    if (userIdFromJWT != userId) {
+        res.send(errResponse(baseResponse.USER_ID_NOT_MATCH));
+    } 
 
     const addFollowerResponse = await userService.createFollower(userId, followerId);
 
@@ -276,14 +296,21 @@ exports.login = async function (req, res) {
  */
  exports.deleteFollow = async function (req, res) {
 
+    // jwt - userId
+
     /**
      * Query String: userId
      */
     const followerId = req.params.followerId;
     const userId = req.query.userId;
+    const userIdFromJWT = req.verifiedToken.userId;
 
     if (!userId) return res.send(response(baseResponse.USER_ID_EMPTY));
     if (!followerId) return res.send(response(baseResponse.FOLLOWER_ID_EMPTY));
+
+    if (userIdFromJWT != userId) {
+        res.send(errResponse(baseResponse.USER_ID_NOT_MATCH));
+    } 
 
     const deleteFollowing = await userService.cancleFollow(userId, followerId);
     return res.send(response(deleteFollowing));
@@ -336,14 +363,21 @@ exports.login = async function (req, res) {
     // jwt - userId, path variable :userId
     // body : nickname
 
-    //const userIdFromJWT = req.verifiedToken.userId;
-
     const userId = req.params.userId;
     const nickname = req.body.nickname;
+    const userIdFromJWT = req.verifiedToken.userId;
 
-    //if (userIdFromJWT != userId) {
-    //    res.send(errResponse(baseResponse.USER_ID_NOT_MATCH));
-    //} 
+    if (!userId) {
+        return res.send(response(baseResponse.USER_ID_EMPTY));
+    }
+
+    if (!nickname) {
+        return res.send(response(baseResponse.NICKNAME_EMPTY));
+    }
+
+    if (userIdFromJWT != userId) {
+        res.send(errResponse(baseResponse.USER_ID_NOT_MATCH));
+    } 
     const editUserNameResult = await userService.editUserName(userId, nickname);
     return res.send(editUserNameResult);
 };
@@ -359,14 +393,21 @@ exports.login = async function (req, res) {
     // jwt - userId, path variable :userId
     // body : nickname
 
-    //const userIdFromJWT = req.verifiedToken.userId;
-
+    const userIdFromJWT = req.verifiedToken.userId;
     const userId = req.params.userId;
     const phoneNumber = req.body.phoneNumber;
 
-    //if (userIdFromJWT != userId) {
-    //    res.send(errResponse(baseResponse.USER_ID_NOT_MATCH));
-    //} 
+    if (!userId) {
+        return res.send(response(baseResponse.USER_ID_EMPTY));
+    }
+
+    if (!phoneNumber) {
+        return res.send(response(baseResponse.PHONE_NUMBER_EMPTY));
+    }
+
+    if (userIdFromJWT != userId) {
+        res.send(errResponse(baseResponse.USER_ID_NOT_MATCH));
+    } 
     const editUserPhoneNumberResult = await userService.editUserPhoneNumber(userId, phoneNumber);
     return res.send(editUserPhoneNumberResult);
 };
@@ -382,14 +423,21 @@ exports.login = async function (req, res) {
     // jwt - userId, path variable :userId
     // body : nickname
 
-    //const userIdFromJWT = req.verifiedToken.userId;
-
+    const userIdFromJWT = req.verifiedToken.userId;
     const userId = req.params.userId;
     const profileImage = req.body.profileImage;
 
-    //if (userIdFromJWT != userId) {
-    //    res.send(errResponse(baseResponse.USER_ID_NOT_MATCH));
-    //} 
+    if (!userId) {
+        return res.send(response(baseResponse.USER_ID_EMPTY));
+    }
+
+    if (!profileImage) {
+        return res.send(response(baseResponse.PROFILE_IMAGE_EMPTY));
+    }
+
+    if (userIdFromJWT != userId) {
+        res.send(errResponse(baseResponse.USER_ID_NOT_MATCH));
+    } 
     const editUserProfileImageResult = await userService.editUserProfileImage(userId, profileImage);
     return res.send(editUserProfileImageResult);
 };

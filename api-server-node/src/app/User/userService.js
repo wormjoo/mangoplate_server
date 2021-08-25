@@ -86,7 +86,18 @@ exports.postSignIn = async function (email, password) {
             } // 유효 기간 365일
         );
 
-        return response(baseResponse.SUCCESS, {'userId': userInfoRows[0].id, 'jwt': token});
+        const connection = await pool.getConnection(async (conn) => conn);
+        const loginUserRows = await userProvider.loginCheck(userInfoRows[0].id);
+  
+        if (loginUserRows.length < 1) {
+            const loginResult = await userDao.insertLogin(connection, userInfoRows[0].id, token);
+        } else {
+            const loginResult = await userDao.updateJwtToken(connection, userInfoRows[0].id, token);
+        }
+        
+        connection.release();
+
+        return response(baseResponse.SUCCESS);
 
     } catch (err) {
         logger.error(`App - postSignIn Service error\n: ${err.message} \n${JSON.stringify(err)}`);
@@ -212,3 +223,24 @@ exports.holicBadge = async function (id, holic) {
         return errResponse(baseResponse.DB_ERROR);
     }
 }
+
+exports.patchJwtStatus = async function (userId) {
+    try {
+
+      const loginUserRow = await userProvider.loginCheck(userId);
+  
+      if (loginUserRow.length < 1)
+        return errResponse(baseResponse.LOGIN_NOT_EXIST);
+      if (loginUserRow[0].status == 'O')
+        return errResponse(baseResponse.LOGIN_NOT_EXIST);
+  
+      const connection = await pool.getConnection(async (conn) => conn);
+      const userIdResult = await userDao.updateJwtStatus(connection, userId);
+      connection.release();
+  
+      return response(baseResponse.SUCCESS);
+    } catch (err) {
+      logger.error(`App - Logout Service error\n: ${err.message}`);
+      return errResponse(baseResponse.DB_ERROR);
+    }
+  };

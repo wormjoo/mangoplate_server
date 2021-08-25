@@ -27,7 +27,7 @@ exports.retrieveFollowerUserList = async function (userId) {
 
 exports.retrieveFollowingUserList = async function (userId) {
   const connection = await pool.getConnection(async (conn) => conn);
-  const userListResult = await userDao.selectFollowingUser(connection, userId);  
+  const userListResult = await userDao.selectFollowingUser(connection, userId);
   
   connection.release();
 
@@ -59,6 +59,14 @@ exports.passwordCheck = async function (selectUserPasswordParams) {
   );
   connection.release();
   return passwordCheckResult[0];
+};
+
+exports.loginCheck = async function (userId) {
+  const connection = await pool.getConnection(async (conn) => conn);
+  const loginResult = await userDao.selectLoginUser(connection, userId);
+  connection.release();
+
+  return loginResult;
 };
 
 exports.accountCheck = async function (email) {
