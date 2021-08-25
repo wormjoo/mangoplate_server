@@ -36,8 +36,8 @@ async function selectAllWannaGo(connection, userId) {
     const selectAllWannaGoQuery = `
         select R.id, R.name, A.detailArea as area, round((select avg(evaluation) from Review where restaurantId = R.id), 1) as rating,
             (select imageUrl from RestaurantImage RI where restaurantId = R.id order by RI.createAt desc limit 1) as imageUrl,
-            (select count(*) from Review where restaurantId = R.id) as reviews,
-            (select count(*) from WannaGo where restaurantId = R.id) as starCount
+            R.views,
+            (select count(*) from Review where restaurantId = R.id) as reviews
         from Restaurant R
         join Area A on R.areaId = A.id
         join WannaGo WG on R.id = WG.restaurantId
@@ -53,8 +53,8 @@ async function selectWannaGo(connection, userId, detailArea) {
     const selectWannaGoQuery = `
         select R.id, R.name, A.detailArea as area, round((select avg(evaluation) from Review where restaurantId = R.id), 1) as rating,
             (select imageUrl from RestaurantImage RI where restaurantId = R.id order by RI.createAt desc limit 1) as imageUrl,
-            (select count(*) from Review where restaurantId = R.id) as reviews,
-            (select count(*) from WannaGo where restaurantId = R.id) as starCount
+            R.views,
+            (select count(*) from Review where restaurantId = R.id) as reviews
         from Restaurant R
         join Area A on R.areaId = A.id
         join WannaGo WG on R.id = WG.restaurantId
