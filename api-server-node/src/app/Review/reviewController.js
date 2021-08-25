@@ -58,13 +58,28 @@ const {response, errResponse} = require("../../../config/response");
 
     /**
      * path variable : restaurantId
+     * Query String: evaluation
      */
     const restaurantId = req.params.restaurantId;
+    let evaluation = req.query.evaluation;
 
     if (!restaurantId) return res.send(errResponse(baseResponse.RESTAURANT_ID_EMPTY));
 
-    const reviewByRestaurant = await reviewProvider.retrieveReviewList(restaurantId);
-    return res.send(response(baseResponse.SUCCESS, reviewByRestaurant));
+    if(!evaluation) {
+        const reviewByRestaurant = await reviewProvider.retrieveReviewList(restaurantId);
+        return res.send(response(baseResponse.SUCCESS, reviewByRestaurant));
+    } else {
+            // 평가도 점수로 변환
+        if (evaluation == '맛있다!') {
+            evaluation = 5;
+        } else if (evaluation == '괜찮다') {
+            evaluation = 3;
+        } else if (evaluation == '별로') {
+            evaluation = 1;
+        }
+        const reviewByRestaurant = await reviewProvider.retrieveReviewList(restaurantId, evaluation);
+        return res.send(response(baseResponse.SUCCESS, reviewByRestaurant));
+    }
 };
 
 /**

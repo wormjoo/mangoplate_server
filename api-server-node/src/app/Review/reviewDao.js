@@ -58,6 +58,37 @@ async function selectReviewByRestaurant(connection, id) {
   return reviewsRows;
 }
 
+// 식당 아이디로 리뷰 조회 (+평가도)
+async function selectReviewByEvaluation(connection, id, evaluation) {
+  const selectReviewByEvaluationQuery = `
+      select R.id, U.nickname, U.profileImage, (select count(*) from Follower where userId = U.id) as followerCount, 
+        (select count(*) from Review where userId = U.id) as reviewCount, U.holic,
+        case evaluation
+          when 5 then '맛있다!'
+          when 3 then '괜찮다'
+          when 1 then '별로'
+        end as evaluation, R.content, group_concat(RI.imageUrl) as reviewImage,
+        (select count(*) from ReviewLike where reviewId = R.id) as likeCount, (select count(*) from ReviewComment where reviewId = R.id) as commentCount,
+        case
+          when timestampdiff(minute, R.createAt,current_timestamp()) < 60
+          then concat(timestampdiff(minute, R.createAt,current_timestamp()),' 분 전')
+          when timestampdiff(hour, R.createAt,current_timestamp()) < 24
+          then concat(timestampdiff(hour, R.createAt,current_timestamp()),' 시간 전')
+          when timestampdiff(day, R.createAt, current_timestamp()) < 8
+          then concat(timestampdiff(day, R.createAt, current_timestamp()),'일 전')
+          else date_format(R.createAt, '%Y-%m-%d')
+        end as date
+      from User U
+      left join Review R on R.userId = U.id
+      left join RestaurantImage RI on R.id = RI.reviewId
+      where R.restaurantId = ?
+      and R.evaluation = ?
+      group by R.id;              
+      `;
+  const [reviewsRows] = await connection.query(selectReviewByEvaluationQuery, [id, evaluation]);
+  return reviewsRows;
+}
+
 // 리뷰 아이디로 특정 리뷰 조회
 async function selectReview(connection, id) {
   const selectReviewQuery = `
@@ -288,6 +319,7 @@ module.exports = {
   insertImage,
   insertReview,
   selectReviewByRestaurant,
+  selectReviewByEvaluation,
   selectReview,
   updateReviewStatus,
   updateReviewContent,

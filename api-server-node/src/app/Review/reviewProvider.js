@@ -7,13 +7,23 @@ const reviewDao = require("./reviewDao");
 
 // Provider: Read 비즈니스 로직 처리
 
-exports.retrieveReviewList = async function (restaurantId) {
-  const connection = await pool.getConnection(async (conn) => conn);
-  let reviewListResult = await reviewDao.selectReviewByRestaurant(connection, restaurantId);
+exports.retrieveReviewList = async function (restaurantId, evaluation) {
+  if (!evaluation) {
+    const connection = await pool.getConnection(async (conn) => conn);
+    const reviewListResult = await reviewDao.selectReviewByRestaurant(connection, restaurantId);
   
-  connection.release();
+    connection.release();
 
-  return reviewListResult;
+    return reviewListResult;
+  } else {
+    const connection = await pool.getConnection(async (conn) => conn);
+    const reviewListResult = await reviewDao.selectReviewByEvaluation(connection, restaurantId, evaluation);
+  
+    connection.release();
+
+    return reviewListResult;
+  }
+  
 };
 
 exports.retrieveReview = async function (reviewId) {
