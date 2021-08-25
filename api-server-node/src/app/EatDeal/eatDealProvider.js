@@ -15,3 +15,12 @@ exports.retrieveEatDealList = async function(area) {
 
     return eatDealList;
 }
+
+exports.retrieveEatDeal = async function(eatDealId) {
+    const connection = await pool.getConnection(async (conn) => conn);
+    const detailEatDeal = await eatDealDao.selectEatDealById(connection, eatDealId);
+
+    connection.release();
+
+    return detailEatDeal;
+}

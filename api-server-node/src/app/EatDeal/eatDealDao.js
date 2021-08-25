@@ -7,13 +7,32 @@ async function selectEatDeal(connection, detailArea) {
       from EatDeal E
       join Restaurant R on E.restaurantId = R.id
       join Area A on R.areaId = A.id
-      where A.detailArea = ?;
+      where A.detailArea = ?
+      and E.status. = 'Y';
       `;
   const [eatDealRows] = await connection.query(selectEatDealQuery, detailArea);
   return eatDealRows;
 }
 
+// 특정 잇딜 조회
+async function selectEatDealById(connection, eatDealId) {
+  const selectEatDealByIdQuery = `
+      select E.id, E.name, E.menu, date_format(CURDATE(), '%Y-%m-%d') as startDate, 
+        date_format(E.endDate, '%Y-%m-%d') as endDate,
+        timestampdiff(DAY, CURDATE(), E.endDate)+1 as duration,
+        format(E.costPrice, 0) as costPrice, format(E.salePrice, 0) as salePrice,
+        round((100-(E.salePrice/E.costPrice)*100)) as discount,
+        (select group_concat(imageUrl) from EatDealImage where eatDealId = E.id) as image,
+        E.simpleInfo, E.restaurantInfo, E.menuInfo
+      from EatDeal E
+      where E.id = ?
+      and E.status = 'Y';
+      `;
+  const eatDealRow = await connection.query(selectEatDealByIdQuery, eatDealId);
+  return eatDealRow[0];
+}
 
 module.exports = {
-  selectEatDeal
+  selectEatDeal,
+  selectEatDealById
 };

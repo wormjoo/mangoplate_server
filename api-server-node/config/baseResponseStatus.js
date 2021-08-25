@@ -24,7 +24,8 @@ module.exports = {
     RESTAURANT_ID_EMPTY : { "isSuccess": false, "code": 2013, "message": "식당 id가 입력되지 않았습니다." },
     REVIEW_ID_EMPTY : { "isSuccess": false, "code": 2014, "message": "리뷰 id가 입력되지 않았습니다." },
     COMMENT_ID_EMPTY : { "isSuccess": false, "code": 2015, "message": "댓글 id가 입력되지 않았습니다." },
-    
+    EATDEAL_ID_EMPTY : { "isSuccess": false, "code": 2016, "message": "잇딜 id가 입력되지 않았습니다." },
+
 
     // Response error
     SIGNUP_REDUNDANT_EMAIL : { "isSuccess": false, "code": 3001, "message":"중복된 이메일입니다." },
