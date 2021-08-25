@@ -71,8 +71,8 @@ async function selectRestaurantById(connection, id) {
           round((select avg(evaluation) from Review where restaurantId = R.id), 1) as rating,
           R.businessHour as businessHour, R.holiday as holiday, R.lastOrder as lastOrder, R.priceInfo as priceInfo,
           date_format(R.updateAt, '%Y-%m-%d') as infoUpdate,
-          (select group_concat(menu) from Menu where restaurantId = R.id) as menu,
-          (select group_concat(FORMAT(price , 0)) from Menu where restaurantId = R.id) as price,
+          (select group_concat(menu separator '/') from Menu where restaurantId = R.id) as menu,
+          (select group_concat(FORMAT(price , 0) separator '/') from Menu where restaurantId = R.id) as price,
           date_format((select updateAt from Menu where restaurantId = R.id order by updateAt desc limit 1), '%Y-%m-%d') as menuUpdate
       from Restaurant R
       where R.id = ?;
