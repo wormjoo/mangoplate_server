@@ -64,7 +64,7 @@ async function selectRestaurantByName(connection, detailArea, name) {
 // 특정 식당 아이디로 조회
 async function selectRestaurantById(connection, id) {
   const selectRestaurantByIdQuery = `
-      select R.name as name, R.address as address, R.callNumber as callNumber,
+      select R.name as name, R.address1 as address, R.callNumber as callNumber,
           (select group_concat(imageUrl) from RestaurantImage where restaurantId = R.id) as imageUrl, R.views as views,
           (select count(*) from Review where restaurantId = R.id) as reviews,
           (select count(*) from WannaGo where restaurantId = R.id) as starCount,
@@ -94,7 +94,7 @@ async function updateViews(connection, id) {
 async function selectMyRestaurant(connection, userId) {
   const selectMyRestaurantQuery = `
       select (select imageUrl from RestaurantImage RI where restaurantId = R.id order by RI.createAt desc limit 1) as imageUrl,
-          R.name, R.address,
+          R.name, R.address1,
           (select type from FoodType F where F.id = R.cuisine) as cuisine,
           case
             when timestampdiff(minute, R.createAt,current_timestamp()) < 60
