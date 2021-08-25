@@ -17,9 +17,14 @@ const {response, errResponse} = require("../../../config/response");
 
     const area = req.query.area;
 
-    const eatDealListResult = await eatDealProvider.retrieveEatDealList(area);
-    
-    return res.send(response(baseResponse.SUCCESS, eatDealListResult));
+    if (!area) {
+        // 전체 지역 조회
+        const eatDealListResult = await eatDealProvider.retrieveEatDealList();
+        return res.send(response(baseResponse.SUCCESS, eatDealListResult));
+    } else {
+        const eatDealListResult = await eatDealProvider.retrieveEatDealList(area);
+        return res.send(response(baseResponse.SUCCESS, eatDealListResult));
+    }
 };
 
 /**

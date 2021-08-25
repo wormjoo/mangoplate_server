@@ -8,12 +8,22 @@ const eatDealDao = require("./eatDealDao");
 // Provider: Read 비즈니스 로직 처리
 
 exports.retrieveEatDealList = async function(area) {
-    const connection = await pool.getConnection(async (conn) => conn);
-    const eatDealList = await eatDealDao.selectEatDeal(connection, area);
+    if (!area) {
+        const connection = await pool.getConnection(async (conn) => conn);
+        const eatDealList = await eatDealDao.selectAllEatDeal(connection);
 
-    connection.release();
+        connection.release();
 
-    return eatDealList;
+        return eatDealList;
+    } else {
+        const connection = await pool.getConnection(async (conn) => conn);
+        const eatDealList = await eatDealDao.selectEatDeal(connection, area);
+
+        connection.release();
+
+        return eatDealList;
+    }
+    
 }
 
 exports.retrieveEatDeal = async function(eatDealId) {
