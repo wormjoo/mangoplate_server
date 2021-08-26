@@ -7,18 +7,27 @@ const {response, errResponse} = require("../../../config/response");
 /**
  * API No. 10
  * API Name : 식당 등록하기 API 
- * [POST] /app/restaurants
+ * [POST] /app/restaurants/:userId
+ * path variable: userId
  */
 exports.postRestaurant = async function (req, res) {
-
     /**
+     * jwt - userId pathvariable: userId
      * Body: name, address, callNumber, cuisine
      */
 
+     const userIdFromJWT = req.verifiedToken.userId;
     const userId = req.params.userId;
     const {name, address, callNumber, cuisine} = req.body;
 
     if(!userId) return res.send(response(baseResponse.USER_ID_EMPTY));
+
+    if (!name) return res.send(response(baseResponse.RESTAURANT_NAME_EMPTY));
+    if (!address) return res.send(response(baseResponse.RESTAURANT_ADDRESS_EMPTY));
+
+    if (userIdFromJWT != userId) {
+        res.send(errResponse(baseResponse.USER_ID_NOT_MATCH));
+    } 
     
     const registrateRestaurant = await restaurantService.createRestaurant(
         userId,
@@ -85,12 +94,18 @@ exports.getRestaurants = async function (req, res) {
  exports.getMyRestaurants = async function (req, res) {
 
     /**
+     * jwt - userId
      * Path varibale: userId
      */
 
     const userId = req.params.userId;
+    const userIdFromJWT = req.verifiedToken.userId;
 
     if(!userId) return res.send(response(baseResponse.USER_ID_EMPTY));
+
+    if (userIdFromJWT != userId) {
+        res.send(errResponse(baseResponse.USER_ID_NOT_MATCH));
+    } 
 
     const myRestaurantResult = await restaurantProvider.retrieveMyRestaurantList(userId);
     return res.send(response(baseResponse.SUCCESS, myRestaurantResult));

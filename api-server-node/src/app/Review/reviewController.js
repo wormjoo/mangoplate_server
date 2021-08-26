@@ -13,10 +13,19 @@ const {response, errResponse} = require("../../../config/response");
  exports.postReview = async function (req, res) {
 
     /**
+     * jwt - userId
      * Body: userId, restaurantId, reviewImage, evaluation, content
      */
 
     let {userId, restaurantId, reviewImage, evaluation, content} = req.body;
+
+    if (!userId) return res.send(errResponse(baseResponse.USER_ID_EMPTY));
+    if (!restaurantId) return res.send(errResponse(baseResponse.RESTAURANT_ID_EMPTY));
+    if (!evaluation) return res.send(errResponse(baseResponse.REVIEW_EVALUATION_EMPTY));
+
+    if (userIdFromJWT != userId) {
+        res.send(errResponse(baseResponse.USER_ID_NOT_MATCH));
+    } 
 
     // 이미지 첨부 안 하면 null로
     if (!reviewImage) {
@@ -111,12 +120,14 @@ const {response, errResponse} = require("../../../config/response");
  exports.patchReview = async function (req, res) {
 
     /**
+     * jwt - userId
      * path variable: reviewId
      * body: content, evaluation
      */
     const reviewId = req.params.reviewId;
     const content = req.body.content;
     let evaluation = req.body.evaluation;
+    const userIdFromJWT = req.verifiedToken.userId;
 
     // 평가도 점수로 변환
     if (evaluation == '맛있다!') {
@@ -128,6 +139,12 @@ const {response, errResponse} = require("../../../config/response");
     }
 
     if (!reviewId) return res.send(errResponse(baseResponse.REVIEW_ID_EMPTY));
+
+    // 리뷰 작성자만 수정할 수 있도록
+    const userId = await reviewProvider.retrieveReviewUser(reviewId);
+    if (userIdFromJWT != userId) {
+        res.send(errResponse(baseResponse.USER_ID_NOT_MATCH));
+    } 
 
     const reviewResult = await reviewService.updateReview(reviewId, content, evaluation);
     return res.send(response(baseResponse.SUCCESS));
@@ -143,6 +160,7 @@ const {response, errResponse} = require("../../../config/response");
  exports.postComment = async function (req, res) {
 
     /**
+     * jwt - userId
      * path variable: reviewId
      * body: userId, content
      */
@@ -150,6 +168,14 @@ const {response, errResponse} = require("../../../config/response");
     const reviewId = req.params.reviewId;
     const userId = req.body.userId;
     const content = req.body.content;
+    const userIdFromJWT = req.verifiedToken.userId;
+
+    if (!userId) return res.send(errResponse(baseResponse.USER_ID_EMPTY));
+    if (!reviewId) return res.send(errResponse(baseResponse.REVIEW_ID_EMPTY));
+
+    if (userIdFromJWT != userId) {
+        res.send(errResponse(baseResponse.USER_ID_NOT_MATCH));
+    } 
 
     const reviewCommentResult = await reviewService.writeComment(reviewId, userId, content);
     return res.send(response(baseResponse.SUCCESS));
@@ -190,8 +216,15 @@ const {response, errResponse} = require("../../../config/response");
      */
     const commentId = req.params.commentId;
     const content = req.body.content;
+    const userIdFromJWT = req.verifiedToken.userId;
 
     if (!commentId) return res.send(errResponse(baseResponse.COMMENT_ID_EMPTY));
+
+    // 리뷰 작성자만 수정할 수 있도록
+    const userId = await reviewProvider.retrieveCommentUser(commentId);
+    if (userIdFromJWT != userId) {
+        res.send(errResponse(baseResponse.USER_ID_NOT_MATCH));
+    } 
 
     const commentResult = await reviewService.updateComment(commentId, content);
     return res.send(response(commentResult));
@@ -207,15 +240,21 @@ const {response, errResponse} = require("../../../config/response");
  exports.postLike = async function (req, res) {
 
     /**
+     * jwt - userId
      * path variable: reviewId
      * body: userId
      */
 
     const reviewId = req.params.reviewId;
     const userId = req.body.userId;
+    const userIdFromJWT = req.verifiedToken.userId;
 
     if (!reviewId) return res.send(errResponse(baseResponse.REVIEW_ID_EMPTY));
     if (!userId) return res.send(response(baseResponse.USER_ID_EMPTY));
+
+    if (userIdFromJWT != userId) {
+        res.send(errResponse(baseResponse.USER_ID_NOT_MATCH));
+    } 
 
     const reviewLikeResult = await reviewService.pressLike(reviewId, userId);
     return res.send(response(baseResponse.SUCCESS));

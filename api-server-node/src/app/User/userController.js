@@ -475,6 +475,8 @@ const signature = hash.toString(CryptoJS.enc.Base64);
 
 exports.send = async function (req, res) {
     const phoneNumber = req.body.phoneNumber;
+
+    if (!phoneNumber) return res.send(response(baseResponse.PHONE_NUMBER_EMPTY));
   
     Cache.del(phoneNumber);
   
@@ -539,6 +541,9 @@ exports.send = async function (req, res) {
 exports.verify = async function (req, res) {
     const phoneNumber = req.body.phoneNumber;
     const verifyCode = req.body.verifyCode;
+
+    if (!phoneNumber) return res.send(response(baseResponse.PHONE_NUMBER_EMPTY));
+    if (!verifyCode) return res.send(response(baseResponse.VERIFY_CODE_EMPTY));
 
     const CacheData = Cache.get(phoneNumber);
 

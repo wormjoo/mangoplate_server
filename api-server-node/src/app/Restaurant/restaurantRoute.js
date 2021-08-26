@@ -3,7 +3,7 @@ module.exports = function(app){
     const jwtMiddleware = require('../../../config/jwtMiddleware');
 
     // 10. 식당 등록하기 API
-    app.post('/app/restaurants/:userId', restaurant.postRestaurant);
+    app.post('/app/restaurants/:userId', jwtMiddleware, restaurant.postRestaurant);
 
     // 11. 식당 조회 API
     app.get('/app/restaurants', restaurant.getRestaurants);
@@ -12,7 +12,7 @@ module.exports = function(app){
     app.get('/app/restaurants/:restaurantId', restaurant.getRestaurant);
 
     // 13. 내가 등록한 식당 조회 API
-    app.get('/app/:userId/restaurants', restaurant.getMyRestaurants);
+    app.get('/app/:userId/restaurants', jwtMiddleware, restaurant.getMyRestaurants);
 
     // 14. 특정 식당 편의정보 조회 API
     app.get('/app/restaurants/:restaurantId/information', restaurant.getRestaurantInfo);

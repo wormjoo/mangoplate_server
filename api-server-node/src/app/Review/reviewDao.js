@@ -315,6 +315,28 @@ async function selectNewsByArea(connection, selectNewsByAreaParams) {
   return newsByAreaRows;
 }
 
+// 리뷰 작성자
+async function selectReviewUser(connection, reviewId) {
+  const selectReviewUserQuery = `
+      select userId 
+      from Review
+      where id = ?;
+      `;
+  const reviewUserRow = await connection.query(selectReviewUserQuery, reviewId);
+  return reviewUserRow[0];
+}
+
+// 댓글 작성자
+async function selectCommentUser(connection, commentId) {
+  const selectCommentUserQuery = `
+      select userId 
+      from ReviewComment
+      where id = ?;
+      `;
+  const commentUserRow = await connection.query(selectCommentUserQuery, commentId);
+  return commentUserRow[0];
+}
+
 module.exports = {
   insertImage,
   insertReview,
@@ -333,5 +355,7 @@ module.exports = {
   updateLike,
   selectLikeUser,
   selectNews,
-  selectNewsByArea
+  selectNewsByArea,
+  selectReviewUser,
+  selectCommentUser
 };

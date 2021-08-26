@@ -13,17 +13,23 @@ const {response, errResponse} = require("../../../config/response");
  */
  exports.postStar = async function (req, res) {
     /**
+     * jwt - userId
      * path variable : restaurantId
      * body: userId
      */
     const restaurantId = req.params.restaurantId;
     const userId = req.body.userId;
+    const userIdFromJWT = req.verifiedToken.userId;
   
     if (!restaurantId)
       return res.send(response(baseResponse.RESTAURANT_ID_EMPTY));
 
     if (!userId)
       return res.send(response(baseResponse.USER_ID_EMPTY));
+
+    if (userIdFromJWT != userId) {
+      res.send(errResponse(baseResponse.USER_ID_NOT_MATCH));
+    } 
   
     const postStarResponse = await wannaGoService.pressStar(restaurantId, userId);
     return res.send(postStarResponse);

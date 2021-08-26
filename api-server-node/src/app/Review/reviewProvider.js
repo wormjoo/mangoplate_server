@@ -35,6 +35,17 @@ exports.retrieveReview = async function (reviewId) {
     return reviewResult;
 };
 
+exports.retrieveReviewUser = async function (reviewId) {
+  const connection = await pool.getConnection(async (conn) => conn);
+  const reviewResult = await reviewDao.selectReviewUser(connection, reviewId);
+
+  const reviewUser = reviewResult[0].userId;
+  
+  connection.release();
+
+  return reviewUser;
+};
+
 exports.retrieveCommentList = async function (reviewId) {
     const connection = await pool.getConnection(async (conn) => conn);
     const commentListResult = await reviewDao.selectCommentByReview(connection, reviewId);
@@ -42,6 +53,17 @@ exports.retrieveCommentList = async function (reviewId) {
     connection.release();
   
     return commentListResult;
+};
+
+exports.retrieveCommentUser = async function (commentId) {
+  const connection = await pool.getConnection(async (conn) => conn);
+  const commentResult = await reviewDao.selectCommentUser(connection, commentId);
+
+  const commentUser = commentResult[0].userId;
+  
+  connection.release();
+
+  return commentUser;
 };
 
 exports.retrieveLikeUserList = async function (reviewId) {

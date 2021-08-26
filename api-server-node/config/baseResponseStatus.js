@@ -33,7 +33,11 @@ module.exports = {
     PHONE_NUMBER_EMPTY : { "isSuccess": false, "code": 2020, "message": "전화번호가 입력되지 않았습니다." },
     NICKNAME_EMPTY : { "isSuccess": false, "code": 2021, "message": "닉네임이 입력되지 않았습니다." },
     EMAIL_EMPTY : { "isSuccess": false, "code": 2022, "message": "이메일이 입력되지 않았습니다." },
-    
+    VERIFY_CODE_EMPTY : { "isSuccess": false, "code": 2023, "message": "인증 코드가 입력되지 않았습니다." },
+    RESTAURANT_NAME_EMPTY : { "isSuccess": false, "code": 2024, "message": "식당명이 입력되지 않았습니다." },
+    RESTAURANT_ADDRESS_EMPTY : { "isSuccess": false, "code": 2025, "message": "식당 주소가 입력되지 않았습니다." },
+    REVIEW_EVALUATION_EMPTY : { "isSuccess": false, "code": 2026, "message": "리뷰에 평가도가 입력되지 않았습니다." },
+
     // Response error
     SIGNUP_REDUNDANT_EMAIL : { "isSuccess": false, "code": 3001, "message":"중복된 이메일입니다." },
     USER_NICKNAME_NOT_EXIST : { "isSuccess": false, "code": 3002, "message":"검색 결과가 없습니다. 다시 확인해 주세요." },
