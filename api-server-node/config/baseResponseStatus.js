@@ -41,6 +41,7 @@ module.exports = {
     PAYMENT_METHOD_EMPTY : { "isSuccess": false, "code": 2028, "message": "결제방식이 입력되지 않았습니다." },
     PURCHASE_ID_EMPTY : { "isSuccess": false, "code": 2029, "message": "구매 id가 입력되지 않았습니다." },
     VISITED_CONTENT_LENGTH : { "isSuccess": false, "code": 2030, "message":"50자 이하로 입력해주세요." },
+    VISITED_ID_EMPTY : { "isSuccess": false, "code": 2031, "message": "가봤어요 id가 입력되지 않았습니다." },
 
     // Response error
     SIGNUP_REDUNDANT_EMAIL : { "isSuccess": false, "code": 3001, "message":"중복된 이메일입니다." },

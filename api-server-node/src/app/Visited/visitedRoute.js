@@ -6,5 +6,5 @@ module.exports = function(app){
     app.post("/app/visited/:restaurantId", jwtMiddleware, visited.postVisited);
 
     // 26. 가봤어요 수정 및 삭제 API
-    //app.patch("/app/visited/:restaurantId", jwtMiddleware, visited.patchVisited)
+    app.patch("/app/visited/:visitedId", jwtMiddleware, visited.patchVisited);
 };

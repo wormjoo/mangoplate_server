@@ -535,7 +535,7 @@ exports.send = async function (req, res) {
 
 /**
  * API No. 49
- * API Name : 휴대폰 인증 번호 발송 API
+ * API Name : 휴대폰 인증 확인 API
  * Body : phoneNumber, ver
  */
 exports.verify = async function (req, res) {

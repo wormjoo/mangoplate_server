@@ -36,3 +36,34 @@ const {response, errResponse} = require("../../../config/response");
     const postVisitedResponse = await visitedService.createVisited(userId, restaurantId, content, public);
     return res.send(postVisitedResponse);
   };
+
+  /**
+ * API No. 26
+ * API Name :가봤어요 수정 및 삭제 API
+ * [PATCH] /app/visited/:visitedId
+ * path variable : visitedId
+ * body: content, public
+ */
+ exports.patchVisited = async function (req, res) {
+
+  /**
+   * jwt - userId
+   * path variable: visitedId
+   * body: content, public
+   */
+  const visitedId = req.params.visitedId;
+  const content = req.body.content;
+  let public = req.body.public;
+  const userIdFromJWT = req.verifiedToken.userId;
+
+  if (!visitedId) return res.send(errResponse(baseResponse.VISITED_ID_EMPTY));
+
+  // 가고싶다 작성자만 수정할 수 있도록
+  const userId = await visitedProvider.retrieveVisitedUser(visitedId);
+  if (userIdFromJWT != userId) {
+      res.send(errResponse(baseResponse.USER_ID_NOT_MATCH));
+  } 
+
+  const visitedResult = await visitedService.updateVisited(visitedId, content, public);
+  return res.send(response(baseResponse.SUCCESS));
+};

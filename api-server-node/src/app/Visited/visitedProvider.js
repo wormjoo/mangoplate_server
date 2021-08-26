@@ -15,3 +15,14 @@ exports.visitedCheck = async function (userId, restaurantId) {
   
     return todayVisitedResult;
 };
+
+exports.retrieveVisitedUser = async function (visitedId) {
+    const connection = await pool.getConnection(async (conn) => conn);
+    const visitedResult = await visitedDao.selectVisitedUser(connection, visitedId);
+  
+    const visitedUser = visitedResult[0].userId;
+    
+    connection.release();
+  
+    return visitedUser;
+  };

@@ -32,3 +32,37 @@ exports.createVisited = async function (userId, restaurantId, content, public) {
         return errResponse(baseResponse.DB_ERROR);
     }
 };
+
+exports.updateVisited = async function (visitedId, content, public) {
+    const connection = await pool.getConnection(async (conn) => conn);
+
+    try {
+        let new_public;
+                
+        if (!content && !public) {
+            // 리뷰 삭제
+            const deleteVisited = await visitedDao.updateVisitedStatus(connection, visitedId);
+        } else {
+            // 리뷰 수정
+            if (!public) {
+                const visitedResult = await visitedDao.selectVisitedUser(connection, visitedId);
+                new_public = visitedResult[0].public;
+            } else {
+                new_public = public;
+            }
+            const editVisited = await visitedDao.updateVisitedContent(connection, visitedId, content, new_public);;
+        }
+
+        // 커밋
+        await connection.commit();   
+        return response(baseResponse.SUCCESS);
+
+    } catch (err) {
+        // 롤백
+        await connection.rollback();
+        logger.error(`App - updateVisited Service error\n: ${err.message}`);
+        return errResponse(baseResponse.DB_ERROR);
+    } finally {
+        connection.release();
+    }
+};

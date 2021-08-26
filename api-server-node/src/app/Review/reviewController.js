@@ -314,7 +314,6 @@ const {response, errResponse} = require("../../../config/response");
             if (!evaluationParams[i])
                 evaluationParams[i] = evaluationParams[0];
         }
-        console.log(evaluationParams);
     }
 
     if (!area) {
