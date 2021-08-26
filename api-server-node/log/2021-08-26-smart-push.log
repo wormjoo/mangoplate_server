@@ -55,3 +55,25 @@
 {"message":"App - updatePurchase Service error\n: connection.query is not a function","level":"error","timestamp":"2021-08-26 17:36:02"}
 {"message":"undefined - API Server Start At Port 3000","level":"info","timestamp":"2021-08-26 17:36:41"}
 {"message":"undefined - API Server Start At Port 3000","level":"info","timestamp":"2021-08-26 17:48:08"}
+{"message":"undefined - API Server Start At Port 3000","level":"info","timestamp":"2021-08-26 20:39:37"}
+{"message":"undefined - API Server Start At Port 3000","level":"info","timestamp":"2021-08-26 20:41:52"}
+{"message":"undefined - API Server Start At Port 3000","level":"info","timestamp":"2021-08-26 20:42:45"}
+{"message":"undefined - API Server Start At Port 3000","level":"info","timestamp":"2021-08-26 20:43:26"}
+{"message":"undefined - API Server Start At Port 3000","level":"info","timestamp":"2021-08-26 20:43:56"}
+{"message":"undefined - API Server Start At Port 3000","level":"info","timestamp":"2021-08-26 20:47:24"}
+{"message":"undefined - API Server Start At Port 3000","level":"info","timestamp":"2021-08-26 21:34:19"}
+{"message":"undefined - API Server Start At Port 3000","level":"info","timestamp":"2021-08-26 21:38:04"}
+{"message":"undefined - API Server Start At Port 3000","level":"info","timestamp":"2021-08-26 21:48:33"}
+{"message":"App - createVisited Service error\n: reviewDao is not defined","level":"error","timestamp":"2021-08-26 21:48:51"}
+{"message":"undefined - API Server Start At Port 3000","level":"info","timestamp":"2021-08-26 21:49:19"}
+{"message":"undefined - API Server Start At Port 3000","level":"info","timestamp":"2021-08-26 21:55:29"}
+{"message":"undefined - API Server Start At Port 3000","level":"info","timestamp":"2021-08-26 21:55:52"}
+{"message":"undefined - API Server Start At Port 3000","level":"info","timestamp":"2021-08-26 21:56:11"}
+{"message":"App - createVisited Service error\n: Cannot add or update a child row: a foreign key constraint fails (`mangoplateDB`.`Visited`, CONSTRAINT `FK_Visited_restaurantId_Restaurant_id` FOREIGN KEY (`restaurantId`) REFERENCES `Restaurant` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT)","level":"error","timestamp":"2021-08-26 21:56:13"}
+{"message":"undefined - API Server Start At Port 3000","level":"info","timestamp":"2021-08-26 22:12:21"}
+{"message":"undefined - API Server Start At Port 3000","level":"info","timestamp":"2021-08-26 22:13:06"}
+{"message":"undefined - API Server Start At Port 3000","level":"info","timestamp":"2021-08-26 22:13:28"}
+{"message":"undefined - API Server Start At Port 3000","level":"info","timestamp":"2021-08-26 22:14:30"}
+{"message":"undefined - API Server Start At Port 3000","level":"info","timestamp":"2021-08-26 22:14:43"}
+{"message":"undefined - API Server Start At Port 3000","level":"info","timestamp":"2021-08-26 22:40:14"}
+{"message":"undefined - API Server Start At Port 3000","level":"info","timestamp":"2021-08-26 22:40:25"}

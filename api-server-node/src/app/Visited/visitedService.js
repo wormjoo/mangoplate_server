@@ -13,7 +13,8 @@ exports.createVisited = async function (userId, restaurantId, content, public) {
     try {
         // 한 식당마다 하루 1개 가봤어요 추가 제한
         const visitedListRows = await visitedProvider.visitedCheck(userId, restaurantId);
-        if (visitedListRows[0].length > 1) {
+        
+        if (visitedListRows[0].length > 0) {
             return errResponse(baseResponse.TODAY_VISITED_EXIST);
         }
 

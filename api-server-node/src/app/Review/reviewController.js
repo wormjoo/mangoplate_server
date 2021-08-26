@@ -312,8 +312,9 @@ const {response, errResponse} = require("../../../config/response");
 
         for (var i = 0; i < 3; i++) {
             if (!evaluationParams[i])
-                evaluationParams[i] = 5;
+                evaluationParams[i] = evaluationParams[0];
         }
+        console.log(evaluationParams);
     }
 
     if (!area) {

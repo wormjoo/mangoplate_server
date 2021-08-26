@@ -40,6 +40,7 @@ module.exports = {
     QUANTITY_EMPTY : { "isSuccess": false, "code": 2027, "message": "잇딜 수량이 입력되지 않았습니다." },
     PAYMENT_METHOD_EMPTY : { "isSuccess": false, "code": 2028, "message": "결제방식이 입력되지 않았습니다." },
     PURCHASE_ID_EMPTY : { "isSuccess": false, "code": 2029, "message": "구매 id가 입력되지 않았습니다." },
+    VISITED_CONTENT_LENGTH : { "isSuccess": false, "code": 2030, "message":"50자 이하로 입력해주세요." },
 
     // Response error
     SIGNUP_REDUNDANT_EMAIL : { "isSuccess": false, "code": 3001, "message":"중복된 이메일입니다." },
@@ -51,7 +52,8 @@ module.exports = {
     COMMENT_NOT_EXIST : { "isSuccess": false, "code": 3007, "message":"삭제된 댓글입니다." },
     USER_ID_NOT_EXIST : { "isSuccess": false, "code": 3008, "message":"존재하지 않는 유저 id입니다." },
     RESTAURANT_ID_NOT_EXIST : { "isSuccess": false, "code": 3009, "message":"존재하지 않는 식당 id입니다." },
-    LOGIN_NOT_EXIST : { "isSuccess": false, "code": 3008, "message":"로그인 정보가 존재하지 않습니다." },
+    LOGIN_NOT_EXIST : { "isSuccess": false, "code": 3010, "message":"로그인 정보가 존재하지 않습니다." },
+    TODAY_VISITED_EXIST : { "isSuccess": false, "code": 3011, "message":"같은 식당에 하루에 한 번만 '가봤어요'를 할 수 있어요." },
 
     //Connection, Transaction 등의 서버 오류
     DB_ERROR : { "isSuccess": false, "code": 4000, "message": "데이터 베이스 에러"},
