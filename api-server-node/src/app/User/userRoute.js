@@ -13,7 +13,7 @@ module.exports = function(app){
     app.get('/app/users',user.getUserByNickname);
 
     // 4. 특정 유저 조회 API
-    app.get('/app/users/:id', user.getUserById);
+    app.get('/app/users/:userId', user.getUserById);
 
     // 5. 로그인 하기 API (JWT 생성)
     app.post('/app/login', user.login);

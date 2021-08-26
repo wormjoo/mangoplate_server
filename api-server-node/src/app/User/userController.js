@@ -123,11 +123,11 @@ exports.getUserById = async function (req, res) {
     /**
      * Path Variable: id
      */
-    const id = req.params.id;
+    const userId = req.params.userId;
 
-    if (!id) return res.send(errResponse(baseResponse.USER_ID_EMPTY));
+    if (!userId) return res.send(errResponse(baseResponse.USER_ID_EMPTY));
 
-    const userByUserId = await userProvider.retrieveUser(id);
+    const userByUserId = await userProvider.retrieveUser(userId);
     return res.send(response(baseResponse.SUCCESS, userByUserId));
 };
 

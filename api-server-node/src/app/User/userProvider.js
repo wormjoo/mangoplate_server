@@ -37,6 +37,7 @@ exports.retrieveFollowingUserList = async function (userId) {
 exports.retrieveUser = async function (id) {
   const connection = await pool.getConnection(async (conn) => conn);
   const userResult = await userDao.selectUserId(connection, id);
+  console.log(userResult);
 
   connection.release();
 

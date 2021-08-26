@@ -69,12 +69,11 @@ async function selectUserAccount(connection, email) {
 // id로 회원 조회
 async function selectUserId(connection, id) {
   const selectUserIdQuery = `
-      SELECT nickname, profileImage, 
-      count(if(F.userId = U.id, F.userId, null)) as followers, 
-      count(if(F.followerId = U.id, F.followerId, null)) as followings
-      FROM User U
-      JOIN Follower F on U.id = F.followerId or U.id = F.userId
-      WHERE U.id = ?;
+      select nickname, profileImage,
+        (select count(followerId) from Follower where userId = U.id) as followers,
+        (select count(userId) from Follower where followerId = U.id) as followings
+      from User U
+      where U.id = ?;
       `;
   const [userIdRows] = await connection.query(selectUserIdQuery, id);
   return userIdRows;
