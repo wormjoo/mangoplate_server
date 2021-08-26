@@ -258,7 +258,7 @@ async function selectNews(connection, evaluationParams) {
           when 5 then '맛있다!'
           when 3 then '괜찮다'
           when 1 then '별로'
-        end as evaluation, R.content, group_concat(RI.imageUrl) as reviewImage,
+        end as evaluation, R2.name as restaurantName, A.detailArea as area, R.content, group_concat(RI.imageUrl) as reviewImage,
         (select count(*) from ReviewLike where reviewId = R.id) as likeCount, (select count(*) from ReviewComment where reviewId = R.id) as commentCount,
         case
           when timestampdiff(minute, R.createAt,current_timestamp()) < 60
@@ -272,6 +272,8 @@ async function selectNews(connection, evaluationParams) {
       from User U
       left join Review R on R.userId = U.id
       left join RestaurantImage RI on R.id = RI.reviewId
+      join Restaurant R2 on R.restaurantId = R2.id
+      join Area A on R2.areaId = A.id
       where evaluation in (?, ?, ?)
       group by R.id;
       `;
@@ -288,7 +290,7 @@ async function selectNewsByArea(connection, selectNewsByAreaParams) {
           when 5 then '맛있다!'
           when 3 then '괜찮다'
           when 1 then '별로'
-        end as evaluation, R.content, group_concat(RI.imageUrl) as reviewImage,
+        end as evaluation, R2.name as restaurantName, A.detailArea as area, R.content, group_concat(RI.imageUrl) as reviewImage,
         (select count(*) from ReviewLike where reviewId = R.id) as likeCount, (select count(*) from ReviewComment where reviewId = R.id) as commentCount,
         case
           when timestampdiff(minute, R.createAt,current_timestamp()) < 60
