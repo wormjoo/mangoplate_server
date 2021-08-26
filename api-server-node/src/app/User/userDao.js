@@ -96,11 +96,11 @@ async function insertFollower(connection, insertFollowerParams) {
 // 팔로워 조회
 async function selectFollowerUser(connection, userId) {
   const selectFollowerUserQuery = `
-      select U.id, U.nickname, U.profileImage, count(R.id) as reviews, count(F2.userId) as followers
-      from Follower F
-      join User U on U.id = F.followerId
-      join Follower F2 on F2.userId = U.id
-      left join Review R on U.id = R.userId
+      select U.id, U.nickname, U.profileImage,
+        (select count(id) from Review where userId = U.id) as reviews,
+        (select count(followerId) from Follower where userId = U.id) as followers
+      from User U
+      join Follower F on U.id = F.followerId
       where F.userId = ?
       group by U.id;
       `;
@@ -111,11 +111,11 @@ async function selectFollowerUser(connection, userId) {
 // 팔로우 조회
 async function selectFollowingUser(connection, userId) {
   const selectFollowingUserQuery = `
-      select U.nickname, U.profileImage, count(R.id), count(F2.userId)
-      from Follower F
-      join User U on U.id = F.userId
-      join Follower F2 on F2.userId = U.id
-      left join Review R on U.id = R.userId
+      select U.id, U.nickname, U.profileImage,
+        (select count(id) from Review where userId = U.id) as reviews,
+        (select count(followerId) from Follower where userId = U.id) as followers
+      from User U
+      join Follower F on U.id = F.userId
       where F.followerId = ?
       group by U.id;
       `;
