@@ -102,7 +102,7 @@ exports.getUserByNickname = async function (req, res) {
     const nickname = req.query.nickname;
 
     if (!nickname) { // 닉네임 빈값
-        return res.send(response(baseResponse.USER_NICKNAME_EMPTY));
+        return res.send(response(baseResponse.NICKNAME_EMPTY));
     } else {
         // 유저 검색 조회
         const userListByNickname = await userProvider.retrieveUserListByNickname(nickname);

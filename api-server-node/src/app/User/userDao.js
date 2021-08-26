@@ -1,11 +1,11 @@
 // 닉네임으로 유저 조회
 async function selectUserByNickname(connection, nickname) {
   const selectUserListQuery = `
-      select U.nickname, U.profileImage, count(R.id) as reviews, count(F.id) as followers
+      select U.nickname, U.profileImage,
+        (select count(*) from Review where U.id = userId) as reviews,
+        (select count(*) from Follower where userId = U.id) as followers
       from User U
-      left join Review R on U.id = R.userId
-      left join Follower F on U.id = F.followerId
-      where U.nickname = ?
+      where U.nickname like ?
       group by U.id;
       `;
   const [userRows] = await connection.query(selectUserListQuery, nickname);

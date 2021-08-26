@@ -9,7 +9,8 @@ const userDao = require("./userDao");
 
 exports.retrieveUserListByNickname = async function (nickname) {
   const connection = await pool.getConnection(async (conn) => conn);
-  const userListResult = await userDao.selectUserByNickname(connection, nickname);  
+  new_nickname = `%${nickname}%`
+  const userListResult = await userDao.selectUserByNickname(connection, new_nickname);  
   
   connection.release();
 

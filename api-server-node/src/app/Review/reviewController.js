@@ -18,7 +18,8 @@ const {response, errResponse} = require("../../../config/response");
      */
 
     let {userId, restaurantId, reviewImage, evaluation, content} = req.body;
-
+    const userIdFromJWT = req.verifiedToken.userId;
+    
     if (!userId) return res.send(errResponse(baseResponse.USER_ID_EMPTY));
     if (!restaurantId) return res.send(errResponse(baseResponse.RESTAURANT_ID_EMPTY));
     if (!evaluation) return res.send(errResponse(baseResponse.REVIEW_EVALUATION_EMPTY));

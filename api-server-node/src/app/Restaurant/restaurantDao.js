@@ -1,7 +1,7 @@
 // 식당 생성
 async function insertRestaurant(connection, insertRestaurantParams) {
   const insertRestaurantQuery = `
-      INSERT INTO Restaurant(userId, name, address, callNumber, cuisine)
+      INSERT INTO Restaurant(userId, name, address1, callNumber, cuisine)
       VALUES (?, ?, ?, ?, ?);
   `;
   const insertRestaurantRow = await connection.query(
