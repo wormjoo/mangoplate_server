@@ -15,6 +15,9 @@ const {connect} = require("http2");
 
 exports.createUser = async function (email, password, phoneNumber, nickname, profileImage) {
     try {
+        // 트랜잭션
+        await connection.beginTransaction();
+        
         // 이메일 중복 확인
         const emailRows = await userProvider.emailCheck(email);
         if (emailRows.length > 0)

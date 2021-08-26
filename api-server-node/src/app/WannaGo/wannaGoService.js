@@ -10,8 +10,10 @@ const {errResponse} = require("../../../config/response");
 // Service: Create, Update, Delete 비즈니스 로직 처리
 
 exports.pressStar = async function (restaurantId, userId) {
+  const connection = await pool.getConnection(async (conn) => conn);
   try {        
-      const connection = await pool.getConnection(async (conn) => conn);
+      // 트랜잭션
+      await connection.beginTransaction();
 
       const starCheck = await wannaGoDao.selectStar(connection, restaurantId, userId);
 
@@ -26,11 +28,16 @@ exports.pressStar = async function (restaurantId, userId) {
           const addStar = await wannaGoDao.updateStar(connection, starCheck[0].id, status);
       }
       
-      connection.release();
+      // 커밋
+      await connection.commit();
       return response(baseResponse.SUCCESS);
 
   } catch (err) {
+      // 롤백
+      await connection.rollback();
       logger.error(`App - pressStar Service error\n: ${err.message}`);
       return errResponse(baseResponse.DB_ERROR);
-  }
+  } finally {
+    connection.release();
+}
 };

@@ -10,10 +10,13 @@ const {errResponse} = require("../../../config/response");
 // Service: Create, Update, Delete 비즈니스 로직 처리
 
 exports.writeReview = async function (userId, restaurantId, image, evaluation, content) {
+    const connection = await pool.getConnection(async (conn) => conn);
+
     try {
+        // 트랜잭션
+        await connection.beginTransaction();
+
         insertReviewParams = [userId, restaurantId, evaluation, content];
-        
-        const connection = await pool.getConnection(async (conn) => conn);
 
         if (image == null) {
             const reviewResult = await reviewDao.insertReview(connection, insertReviewParams);
@@ -24,18 +27,24 @@ exports.writeReview = async function (userId, restaurantId, image, evaluation, c
             const imageResult = await reviewDao.insertImage(connection, imageParams);
             console.log(`추가된 리뷰 : ${reviewResult[0].insertId}`);
         }
-        connection.release();
+        // 커밋
+        await connection.commit();        
         return response(baseResponse.SUCCESS);
 
     } catch (err) {
+        // 롤백
+        await connection.rollback();
         logger.error(`App - writeReview Service error\n: ${err.message}`);
         return errResponse(baseResponse.DB_ERROR);
+    } finally {
+        connection.release();
     }
 };
 
 exports.updateReview = async function (reviewId, content, evaluation) {
+    const connection = await pool.getConnection(async (conn) => conn);
+
     try {
-        const connection = await pool.getConnection(async (conn) => conn);
                 
         if (!content && !evaluation) {
             // 리뷰 삭제
@@ -44,34 +53,52 @@ exports.updateReview = async function (reviewId, content, evaluation) {
             // 리뷰 수정
             const editReview = await reviewDao.updateReviewContent(connection, reviewId, content, evaluation);;
         }
-        connection.release();
+
+        // 커밋
+        await connection.commit();   
         return response(baseResponse.SUCCESS);
 
     } catch (err) {
+        // 롤백
+        await connection.rollback();
         logger.error(`App - updateReview Service error\n: ${err.message}`);
         return errResponse(baseResponse.DB_ERROR);
+    } finally {
+        connection.release();
     }
 };
 
 exports.writeComment = async function (reviewId, userId, content) {
+    const connection = await pool.getConnection(async (conn) => conn);
+
     try {
+        // 트랜잭션
+        await connection.beginTransaction();
+
         insertCommentParams = [reviewId, userId, content];
-        
-        const connection = await pool.getConnection(async (conn) => conn);
 
         const insertCommentResult = await reviewDao.insertReviewComment(connection, insertCommentParams);
-        connection.release();
+        
+        // 커밋
+        await connection.commit();
         return response(baseResponse.SUCCESS);
 
     } catch (err) {
+        // 롤백
+        await connection.rollback();
         logger.error(`App - writeComment Service error\n: ${err.message}`);
         return errResponse(baseResponse.DB_ERROR);
+    } finally {
+        connection.release();
     }
 };
 
 exports.updateComment = async function (commentId, content) {
+    const connection = await pool.getConnection(async (conn) => conn);
+
     try {
-        const connection = await pool.getConnection(async (conn) => conn);
+        // 트랜잭션
+        await connection.beginTransaction();
 
         const commentCheck = await reviewDao.selectComment(connection, commentId);
         if(commentCheck.length < 1) {
@@ -85,18 +112,27 @@ exports.updateComment = async function (commentId, content) {
             // 댓글 수정
             const editComment = await reviewDao.updateCommentContent(connection, commentId, content);;
         }
-        connection.release();
+
+        // 커밋
+        await connection.commit();
         return response(baseResponse.SUCCESS);
 
     } catch (err) {
+        // 롤백
+        await connection.rollback();
         logger.error(`App - updateComment Service error\n: ${err.message}`);
         return errResponse(baseResponse.DB_ERROR);
+    } finally {
+        connection.release();
     }
 };
 
 exports.pressLike = async function (reviewId, userId) {
+    const connection = await pool.getConnection(async (conn) => conn);
+
     try {        
-        const connection = await pool.getConnection(async (conn) => conn);
+        // 트랜잭션
+        await connection.beginTransaction();
 
         const likeCheck = await reviewDao.selectLike(connection, reviewId, userId);
 
@@ -111,11 +147,16 @@ exports.pressLike = async function (reviewId, userId) {
             const addLike = await reviewDao.updateLike(connection, likeCheck[0].id, status);
         }
         
-        connection.release();
+        // 커밋
+        await connection.commit();
         return response(baseResponse.SUCCESS);
 
     } catch (err) {
+        // 롤백
+        await connection.rollback();
         logger.error(`App - pressLike Service error\n: ${err.message}`);
         return errResponse(baseResponse.DB_ERROR);
+    } finally {
+        connection.release();
     }
 };
