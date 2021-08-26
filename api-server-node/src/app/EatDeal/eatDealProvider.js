@@ -34,3 +34,23 @@ exports.retrieveEatDeal = async function(eatDealId) {
 
     return detailEatDeal;
 }
+
+exports.retrievePurchaseUser = async function(purchaseId) {
+    const connection = await pool.getConnection(async (conn) => conn);
+    const purchaseResult = await eatDealDao.selectPurchaseUser(connection, purchaseId);
+
+    const purchaseUser = purchaseResult[0].userId;
+
+    connection.release();
+
+    return purchaseUser;
+}
+
+exports.getOrderList = async function(eatDealId) {
+    const connection = await pool.getConnection(async (conn) => conn);
+    const orderListRow = await eatDealDao.selectOrderList(connection, eatDealId);
+
+    connection.release();
+
+    return orderListRow;
+}

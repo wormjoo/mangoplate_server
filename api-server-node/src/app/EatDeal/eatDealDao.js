@@ -47,8 +47,60 @@ async function selectEatDealById(connection, eatDealId) {
   return eatDealRow[0];
 }
 
+// 잇딜 구매내역 생성
+async function insertPurchase(connection, insertPurchaseParams) {
+  const insertPurchaseQuery = `
+      insert into Purchase(eatdealId, userId, quantity, payMethod) 
+      values (?, ?, ?, ?);
+      `;
+  const insertPurchaseRow = await connection.query(
+    insertPurchaseQuery,
+    insertPurchaseParams
+  );
+
+  return insertPurchaseRow;
+}
+
+// 잇딜 구매자
+async function selectPurchaseUser(connection, purchaseId) {
+  const selectPurchaseUserQuery = `
+      select userId, status
+      from Purchase
+      where id = ?;
+      `;
+  const purchaseUserRow = await connection.query(selectPurchaseUserQuery, purchaseId);
+  return purchaseUserRow[0];
+}
+
+// 잇딜 구매 취소
+async function updatePurchaseStatus(connection, purchaseId) {
+  const updatePurchaseStatusQuery = `
+      UPDATE Purchase 
+      set status = 'N' 
+      where id = ?;
+      `;
+  const canclePurchaseRow = await connection.query(updatePurchaseStatusQuery, purchaseId);
+  return canclePurchaseRow;
+}
+
+// 주문 목록 조회
+async function selectOrderList(connection, eatDealId) {
+  const selectOrderListQuery = `
+      select id, name, menu, salePrice
+      from EatDeal 
+      where id = ?;
+      `;
+  const [orderRows] = await connection.query(selectOrderListQuery, eatDealId);
+  return orderRows;
+}
+
+
 module.exports = {
   selectEatDeal,
   selectAllEatDeal,
-  selectEatDealById
+  selectEatDealById,
+  insertPurchase,
+  selectPurchaseUser,
+  updatePurchaseStatus,
+  selectOrderList
 };

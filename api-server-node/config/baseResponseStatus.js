@@ -37,6 +37,9 @@ module.exports = {
     RESTAURANT_NAME_EMPTY : { "isSuccess": false, "code": 2024, "message": "식당명이 입력되지 않았습니다." },
     RESTAURANT_ADDRESS_EMPTY : { "isSuccess": false, "code": 2025, "message": "식당 주소가 입력되지 않았습니다." },
     REVIEW_EVALUATION_EMPTY : { "isSuccess": false, "code": 2026, "message": "리뷰에 평가도가 입력되지 않았습니다." },
+    QUANTITY_EMPTY : { "isSuccess": false, "code": 2027, "message": "잇딜 수량이 입력되지 않았습니다." },
+    PAYMENT_METHOD_EMPTY : { "isSuccess": false, "code": 2028, "message": "결제방식이 입력되지 않았습니다." },
+    PURCHASE_ID_EMPTY : { "isSuccess": false, "code": 2029, "message": "구매 id가 입력되지 않았습니다." },
 
     // Response error
     SIGNUP_REDUNDANT_EMAIL : { "isSuccess": false, "code": 3001, "message":"중복된 이메일입니다." },
