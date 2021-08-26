@@ -62,10 +62,75 @@ async function updateVisitedContent(connection, id, content, public) {
     return editVisitedRow[0];
 }
 
+// 유저 닉네임 조회
+async function selectUser(connection, id) {
+    const selectUserQuery = `
+        select nickname
+        from User
+        where id = ?;
+        `;
+    const userRow = await connection.query(selectUserQuery, id);
+    return userRow[0];
+}
+
+// 식당 이름 조회
+async function selectRestaurant(connection, id) {
+    const selectRestaurantQuery = `
+        select name
+        from Restaurant
+        where id = ?;
+        `;
+    const restaurantRow = await connection.query(selectRestaurantQuery, id);
+    return restaurantRow[0];
+}
+
+// 전체 지역 가봤어요 리스트 조회
+async function selectAllVisitedList(connection, id) {
+    const selectAllVisitedListQuery = `
+        select U.id, U.nickname, U.profileImage,
+            (select count(id) from Review where userId = U.id) as reviews,
+            (select count(followerId) from Follower where userId = U.id) as followers,
+            R.name, A.detailArea, V.content, FT.type, R.views,
+            (select count(id) from Review where restaurantId = R.id) as reviews
+        from Visited V
+        join User U on V.userId = U.id
+        join Restaurant R on V.restaurantId = R.id
+        join Area A on R.areaId = A.id
+        join FoodType FT on R.cuisine = FT.id
+        where U.id = ?;
+        `;
+    const [visitedListRows] = await connection.query(selectAllVisitedListQuery, id);
+    return visitedListRows;
+}
+
+// 일부 지역 가봤어요 리스트 조회
+async function selectVisitedList(connection, id, detailArea) {
+    const selectVisitedListQuery = `
+        select U.id, U.nickname, U.profileImage,
+            (select count(id) from Review where userId = U.id) as reviews,
+            (select count(followerId) from Follower where userId = U.id) as followers,
+            R.name, A.detailArea, V.content, FT.type, R.views,
+            (select count(id) from Review where restaurantId = R.id) as reviews
+        from Visited V
+        join User U on V.userId = U.id
+        join Restaurant R on V.restaurantId = R.id
+        join Area A on R.areaId = A.id
+        join FoodType FT on R.cuisine = FT.id
+        where U.id = ?
+        and A.detailArea = ?;
+        `;
+    const [visitedListRows] = await connection.query(selectVisitedListQuery, [id, detailArea]);
+    return visitedListRows;
+}
+
 module.exports = {
     insertVisited,
     selectTodayVisited,
     selectVisitedUser,
     updateVisitedStatus,
-    updateVisitedContent
+    updateVisitedContent,
+    selectUser,
+    selectRestaurant,
+    selectAllVisitedList,
+    selectVisitedList
 };

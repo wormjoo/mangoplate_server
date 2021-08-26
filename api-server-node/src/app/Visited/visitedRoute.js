@@ -7,4 +7,7 @@ module.exports = function(app){
 
     // 26. 가봤어요 수정 및 삭제 API
     app.patch("/app/visited/:visitedId", jwtMiddleware, visited.patchVisited);
+
+    // 28. 가봤어요 리스트 조회 API
+    app.get('/app/:userId/visited', visited.getVisited);
 };

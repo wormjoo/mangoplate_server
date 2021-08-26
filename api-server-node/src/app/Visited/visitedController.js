@@ -67,3 +67,29 @@ const {response, errResponse} = require("../../../config/response");
   const visitedResult = await visitedService.updateVisited(visitedId, content, public);
   return res.send(response(baseResponse.SUCCESS));
 };
+
+/**
+ * API No. 28
+ * API Name : 가봤어요 리스트 조회 API
+ * [GET] /app/:userId/visited
+ */
+ exports.getVisited = async function (req, res) {
+
+  /**
+   * path variable: userId
+   * Query string: area
+   */
+   const userId = req.params.userId;
+   const area = req.query.area;
+
+   if (!userId)
+      return res.send(response(baseResponse.USER_ID_EMPTY));
+
+  if (!area) {
+    const getVisitedListResponse = await visitedProvider.retrieveVisitedList(userId);
+    return res.send(response(baseResponse.SUCCESS, getVisitedListResponse));
+  } else {
+    const getVisitedListResponse = await visitedProvider.retrieveVisitedList(userId, area);
+    return res.send(response(baseResponse.SUCCESS, getVisitedListResponse));
+  }
+};

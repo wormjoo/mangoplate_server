@@ -13,12 +13,19 @@ exports.createVisited = async function (userId, restaurantId, content, public) {
     try {
         // 한 식당마다 하루 1개 가봤어요 추가 제한
         const visitedListRows = await visitedProvider.visitedCheck(userId, restaurantId);
+
+        if(!content) {
+            const userNickname = await visitedProvider.userCheck(userId);
+            const restaurantName = await visitedProvider.restaurantCheck(restaurantId);
+            content = `${userNickname}님이 ${restaurantName}에 방문하엿습니다.`
+        }
         
         if (visitedListRows[0].length > 0) {
             return errResponse(baseResponse.TODAY_VISITED_EXIST);
         }
 
         insertVisitedParams = [userId, restaurantId, content, public];
+        
         const connection = await pool.getConnection(async (conn) => conn);
         const visitedResult = await visitedDao.insertVisited(connection, insertVisitedParams);
 
@@ -37,6 +44,9 @@ exports.updateVisited = async function (visitedId, content, public) {
     const connection = await pool.getConnection(async (conn) => conn);
 
     try {
+        // 트랜잭션
+        await connection.beginTransaction();
+        
         let new_public;
                 
         if (!content && !public) {

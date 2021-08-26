@@ -25,4 +25,43 @@ exports.retrieveVisitedUser = async function (visitedId) {
     connection.release();
   
     return visitedUser;
-  };
+};
+
+exports.userCheck = async function (userId) {
+    const connection = await pool.getConnection(async (conn) => conn);
+    let userResult = await visitedDao.selectUser(connection, userId);
+
+    const userNickname = userResult[0].nickname;
+    
+    connection.release();
+  
+    return userNickname;
+};
+
+exports.restaurantCheck = async function (restaurantId) {
+    const connection = await pool.getConnection(async (conn) => conn);
+    let restaurantResult = await visitedDao.selectRestaurant(connection, restaurantId);
+
+    const restaurantName = restaurantResult[0].name;
+    
+    connection.release();
+  
+    return restaurantName;
+};
+
+exports.retrieveVisitedList = async function (userId, detailArea) {
+    if (!detailArea) {
+        const connection = await pool.getConnection(async (conn) => conn);
+        const visitedListResult = await visitedDao.selectAllVisitedList(connection, userId);
+        connection.release();
+
+        return visitedListResult;
+
+    } else {
+        const connection = await pool.getConnection(async (conn) => conn);
+        const visitedListResult = await visitedDao.selectVisitedList(connection, userId, detailArea);
+        connection.release();
+
+        return visitedListResult;
+    }
+};

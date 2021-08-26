@@ -59,6 +59,4 @@ const {response, errResponse} = require("../../../config/response");
     const getStarListResponse = await wannaGoProvider.retrieveStarList(userId, area);
     return res.send(response(baseResponse.SUCCESS, getStarListResponse));
   }
-
-  
 };
